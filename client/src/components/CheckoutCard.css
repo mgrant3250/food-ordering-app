@@ -1,0 +1,145 @@
+.cart {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table-head,
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.table-head {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+.cart-row:last-child {
+  border-bottom: none;
+}
+
+.cart span {
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+}
+
+.cart span:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+.cart span:nth-child(2) {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.cart span:last-child {
+  text-align: right;
+}
+
+.subtotal-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid #ddd;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2e7d32; /* optional green tone for price */
+  background-color: #f9f9f9; /* optional background */
+  gap: 0.5rem;
+  width: 50%;
+  margin: auto;
+}
+
+.subtotal-container span:last-child {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* Remove button */
+.remove-btn {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.remove-btn:hover {
+  background-color: #c62828;
+}
+
+/* Bottom buttons */
+.cart-buttons {
+  max-width: 700px;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.clear-btn,
+.checkout-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clear-btn {
+  background-color: #757575;
+  color: white;
+}
+
+.clear-btn:hover {
+  background-color: #616161;
+}
+
+.checkout-btn {
+  background-color: #2e7d32;
+  color: white;
+}
+
+.checkout-btn:hover {
+  background-color: #1b5e20;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .table-head,
+  .cart-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .cart-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cart span {
+    text-align: left !important;
+    width: 100%;
+  }
+
+  .remove-btn {
+    margin-top: 4px;
+  }
+}
