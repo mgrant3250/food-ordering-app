@@ -37,3 +37,26 @@
 .summary h4 {
   margin-bottom: 0.5rem;
 }
+
+.submit-button {
+  background-color: #d35400;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 1rem;
+  display: inline-block;
+}
+
+.submit-button:hover {
+  background-color: #e67e22;
+  transform: scale(1.03);
+}
+
+.submit-button:active {
+  background-color: #c84300;
+  transform: scale(0.98);
+}

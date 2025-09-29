@@ -31,8 +31,11 @@ const CheckoutCard = ({cart, setCart, count, setCount}) => {
             </div>
             {Object.entries(cart).map(([key, value]) => (
                 <div key={key} className="cart-row">
-                    <span>{key}</span>
-                    <span>${value.price * value.quantity}</span>
+                    <span>
+                      {value.baseItem} <br />
+                      <small>Side: {value.side || 'None'} | Drink: {value.drink || 'None'}</small>
+                    </span>
+                    <span>${(value.price * value.quantity).toFixed(2)}</span>
                     <span>{value.quantity}</span>
                     <button onClick={() => removeItem(key)} className='remove-btn'>Remove Item</button>
                 </div>
@@ -42,7 +45,7 @@ const CheckoutCard = ({cart, setCart, count, setCount}) => {
             <span>Total:</span>
             <span>${subtotal.toFixed(2)}</span>
             <span>Tax:</span>
-            <span>{(subtotal *0.07).toFixed(2)}</span>
+            <span>${(subtotal *0.07).toFixed(2)}</span>
             <span>Subtotal: </span>
             <span>${(subtotal + subtotal * 0.07).toFixed(2)}</span>
         </div>

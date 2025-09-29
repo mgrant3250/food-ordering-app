@@ -1,21 +1,30 @@
-export function updateCart(prevCart, item) {
+export function updateCart(prevCart, item, selectedDrink, selectedSide, menu) {
   const itemName = item.name;
   const itemPrice = item.price;
 
-  const existingItem = prevCart[itemName];
+  const sidePrice = menu.sides.find(s => s.name === selectedSide)?.price || 0;
+  const drinkPrice = selectedDrink ? 1.99 : 0;
+  const totalPrice = item.price + sidePrice + drinkPrice;
+
+  const cartKey = `${itemName} | Side: ${selectedSide || 'None'} | Drink: ${selectedDrink || 'None'}`;
+
+  const existingItem = prevCart[cartKey];
 
   if (!existingItem) {
     return {
       ...prevCart,
-      [itemName]: {
-        price: itemPrice,
+      [cartKey]: {
+        price: totalPrice,
         quantity: 1,
+        baseItem: item.name,
+        side: selectedSide,
+        drink: selectedDrink,
       },
     };
   } else {
     return {
       ...prevCart,
-      [itemName]: {
+      [cartKey]: {
         ...existingItem,
         quantity: existingItem.quantity + 1,
       },

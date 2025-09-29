@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import Test from './components/test'
+import ItemOptions from './ItemOptions'
 import FoodCard from './components/FoodCard'
 import Navbar from './components/Navbar'
 import Checkout from './Checkout'
@@ -33,6 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={<FoodCard cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
           <Route path="/checkout" element={<Checkout cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
+          <Route path="/options" element={<ItemOptions cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
           <Route path="/test" element={<Test />} />
         </Routes>
       </Router>

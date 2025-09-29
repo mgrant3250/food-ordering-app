@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { updateCart, getTotalItemCount } from '../utils/cartUtils'
+import { Link } from 'react-router-dom'
 import './FoodCard.css'
 import hamburger from '../assets/hamburger.jpg'
 import fries from '../assets/fries.jpg'
@@ -71,7 +72,7 @@ const menu = {
         name: "Sweet and Sour"
       }
     ],
-    Drinks: [
+    drinks: [
       {
         name: "Coke"
       },
@@ -116,7 +117,7 @@ const FoodCard = ({cart, setCart, setCount}) => {
         </div>
         <div className="food-card-price">
           <span>${item.price}</span>
-          <button onClick={() => addToCart(item)}>Add to Cart</button>
+          <Link to="/options" state={{item, menu}}> <button>Add to Cart</button> </Link>
         </div>
       </div>
       ))}
