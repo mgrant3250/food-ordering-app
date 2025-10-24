@@ -10,7 +10,7 @@ const Navbar = ({count, setCount}) => {
             <h1 className='navbar-title'>title</h1>
             <ul className='navbar-links'>
                 <li><Link to="/">home</Link></li>
-                <li><Link to="/test">test</Link></li>
+                <li><Link to="/login">test</Link></li>
                 <li>dinner</li>
 
                 <li><Link to="/checkout" className='cart-icon-wrapper'>

@@ -68,3 +68,9 @@
   color: #666;
   text-align: center;
 }
+
+.account-links{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}

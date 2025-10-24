@@ -5,6 +5,8 @@ import ItemOptions from './ItemOptions'
 import FoodCard from './components/FoodCard'
 import Navbar from './components/Navbar'
 import Checkout from './Checkout'
+import Register from './Register'
+import Login from './Login'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 function App() {
@@ -35,7 +37,8 @@ function App() {
           <Route path="/" element={<FoodCard cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
           <Route path="/checkout" element={<Checkout cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
           <Route path="/options" element={<ItemOptions cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
-          <Route path="/test" element={<Test />} />
+          <Route path="/login" element={<Login onLogin={(data) => setUser(data.email)}/>} />
+          <Route path="/Register" element={<Register />} />
         </Routes>
       </Router>
     </>
