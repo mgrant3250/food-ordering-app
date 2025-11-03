@@ -13,10 +13,10 @@ mongoose.connect('mongodb://localhost:27017/foodAppDB', {
 
 async function seedMenuItems() {
   try {
-    await MenuItem.deleteMany(); // optional: clear existing items first
+    await MenuItem.deleteMany();
 
     const items = [
-      // Entrees
+        //entrees
       {
         name: "Hamburger",
         type: "entree",

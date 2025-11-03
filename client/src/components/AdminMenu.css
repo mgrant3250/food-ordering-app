@@ -1,0 +1,75 @@
+.admin-menu-container {
+  background-color: #fff;
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.admin-menu-container:hover {
+  transform: translateY(-2px);
+}
+
+.admin-menu-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  letter-spacing: 0.5px;
+}
+
+.admin-menu-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-menu-container input,
+.admin-menu-container select {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-menu-container input:focus,
+.admin-menu-container select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+.admin-menu-container button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.admin-menu-container button:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+.admin-menu-container button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
+  .admin-menu-container {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .admin-menu-container h2 {
+    font-size: 1.5rem;
+  }
+}

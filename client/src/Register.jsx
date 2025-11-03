@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './Register.css'; // optional, if you want to style it
+import './Register.css';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ const Register = () => {
     setError('');
     setSuccess('');
 
-    // Basic client-side validation
+    
     if (!email || !password || !confirmPassword) {
       setError('Please fill in all fields.');
       return;

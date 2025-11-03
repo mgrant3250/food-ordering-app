@@ -28,9 +28,9 @@ const Login = ({onLogin}) => {
       if (response.ok && data.success) {
         setError('');
         alert("login successful")
-        localStorage.setItem('token', data.token); // store JWT
-        localStorage.setItem('user', JSON.stringify({ email: data.email })); // store user info
-        onLogin?.(data); // You can store user info or token here
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify({ email: data.email, role: data.role })); 
+        onLogin?.(data); 
       } else {
         alert("login failed")
         setError(data.message || 'Login failed');
