@@ -1,10 +1,15 @@
 import {useState} from 'react'
 import { Link } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({onLogin}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+
+  const togglePassword = () => setShowPassword(prev => !prev);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,12 +32,13 @@ const Login = ({onLogin}) => {
 
       if (response.ok && data.success) {
         setError('');
-        alert("login successful")
+        toast.success("Login Successful");
+        const userData = {email: data.email, role: data.role}
         localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify({ email: data.email, role: data.role })); 
+        localStorage.setItem('user', JSON.stringify(userData)); 
         onLogin?.(data); 
       } else {
-        alert("login failed")
+        toast.error("Login Failed");
         setError(data.message || 'Login failed');
       }
     } catch (err) {
@@ -46,25 +52,42 @@ const Login = ({onLogin}) => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
 
-        {error && <div className="error">{error}</div>}
+        {error && <div className="error" role="alert" aria-live="assertive">{error}</div>}
 
-        <label>Email:</label>
+        <label htmlFor='email'>Email:</label>
         <input
+          id='email'
           type="email"
           placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          aria-required="true"
+          aria-invalid={!!error}
         />
 
-        <label>Password:</label>
+        <label htmlFor='password'>Password:</label>
+        <div className='password-wrapper'>
         <input
-          type="password"
+          id='password'
+          type={showPassword ? "text" : "password"}
           placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          aria-required="true"
+          aria-invalid={!!error}
         />
 
-        <button type="submit">Log In</button>
+        <button
+          type="button"
+          onClick={togglePassword}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+          className="password-toggle"
+        >
+          {showPassword ? "hide" : "show"}
+        </button>
+        </div>
+
+        <button type="submit" className='submit'>Log In</button>
 
         <p className="demo-info">
           <strong>Demo Login:</strong><br />
@@ -73,10 +96,11 @@ const Login = ({onLogin}) => {
         </p>
 
         <div className="account-links">
-          <Link to="/register">Create Account</Link>
-          <a href='#'>Forgot Password?</a>
+          <Link to="/register" aria-label='Create a new acount'>Create Account</Link>
+          <a href='#' aria-label='Reset your password'>Forgot Password?</a>
         </div>
       </form>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

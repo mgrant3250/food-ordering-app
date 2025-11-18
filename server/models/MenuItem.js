@@ -25,6 +25,12 @@ const menuItemSchema = new mongoose.Schema({
             return this.type === "entree"
         }
     },
+    description: {
+        type: String,
+        required: false,
+        trim: true,
+        maxlength: 500
+    }
 }, {
     timestamps: true
 })

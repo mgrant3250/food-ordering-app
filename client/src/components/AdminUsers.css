@@ -28,7 +28,7 @@
 }
 
 .users-table th {
-  background-color: #007bff;
+  background-color: var(--primary-color);
   color: #fff;
   font-weight: 600;
 }

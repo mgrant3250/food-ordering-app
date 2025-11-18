@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import AdminMenu from "./components/AdminMenu";
 import AdminOrders from "./components/AdminOrders";
 import AdminUsers from "./components/AdminUsers";
+import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const [tab, setTab] = useState("menu");
@@ -9,15 +10,33 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
+
       <nav className="admin-nav">
-        <button onClick={() => setTab("menu")}>Menu Items</button>
-        <button onClick={() => setTab("orders")}>Orders</button>
-        <button onClick={() => setTab("users")}>Users</button>
+        <button
+          className={tab === "menu" ? "active" : ""}
+          onClick={() => setTab("menu")}
+        >
+          Menu Items
+        </button>
+        <button
+          className={tab === "orders" ? "active" : ""}
+          onClick={() => setTab("orders")}
+        >
+          Orders
+        </button>
+        <button
+          className={tab === "users" ? "active" : ""}
+          onClick={() => setTab("users")}
+        >
+          Users
+        </button>
       </nav>
 
-      {tab === "menu" && <AdminMenu />}
-      {tab === "orders" && <AdminOrders />}
-      {tab === "users" && <AdminUsers />}
+      <div className="tab-content">
+        {tab === "menu" && <AdminMenu />}
+        {tab === "orders" && <AdminOrders />}
+        {tab === "users" && <AdminUsers />}
+      </div>
     </div>
   );
 };

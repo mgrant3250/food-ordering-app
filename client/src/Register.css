@@ -5,6 +5,7 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #fefefe;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 .register-form h2 {
@@ -21,13 +22,15 @@
   padding: 8px;
   margin-top: 0.25rem;
   box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 .register-form button {
   width: 100%;
   padding: 10px;
   margin-top: 1.5rem;
-  background-color: #007bff;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -35,7 +38,7 @@
 }
 
 .register-form button:hover {
-  background-color: #0056b3;
+  background-color: var(--secondary-color);
 }
 
 .error {

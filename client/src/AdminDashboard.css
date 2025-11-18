@@ -1,0 +1,71 @@
+.admin-dashboard {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px 30px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease;
+}
+
+.admin-dashboard h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.admin-nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.admin-nav button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--primary-color); /* your app's primary color */
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.admin-nav button:hover {
+  background-color: var(--secondary-color); /* hover color */
+  transform: scale(1.03);
+}
+
+.admin-nav button:active {
+  transform: scale(0.97);
+}
+
+.admin-nav button.active {
+  background-color: var(--secondary-color);
+  font-weight: 600;
+}
+
+/* Make it responsive */
+@media (max-width: 600px) {
+  .admin-dashboard {
+    width: 90%;
+    padding: 15px 20px;
+  }
+
+  .admin-dashboard h1 {
+    font-size: 1.5rem;
+  }
+
+  .admin-nav {
+    gap: 10px;
+  }
+
+  .admin-nav button {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+}
