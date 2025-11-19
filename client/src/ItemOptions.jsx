@@ -1,12 +1,14 @@
 import {useState, useEffect, useCallback} from 'react'
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import "./ItemOptions.css"
 import { getTotalItemCount, updateCart} from './utils/cartUtils'
 
 
 const ItemOptions = ({cart, setCart, setCount}) => {
   const location = useLocation();
+  const navigate = useNavigate();
     const { item, menu } = location.state || {};
   
     const [selectedSide, setSelectedSide] = useState('');
@@ -23,6 +25,7 @@ const ItemOptions = ({cart, setCart, setCount}) => {
         setCart(prevCart =>
         updateCart(prevCart, item, selectedDrink, selectedSide, menu)
   );
+        navigate("/")
 };
   
     return (
@@ -85,9 +88,7 @@ const ItemOptions = ({cart, setCart, setCount}) => {
           <p><strong>Drink:</strong> {selectedDrink || 'None'}</p>
         </div>
 
-          <Link to="/">
         <button type="submit" onClick={() => addToCart(item, selectedDrink, selectedSide, menu)} className="submit-button">Add to Order</button>
-        </Link>
       </div>
       </>
     )

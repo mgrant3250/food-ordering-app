@@ -18,9 +18,11 @@ const createWrapper = () => {
   );
 };
 
+const mockNavigate = vi.fn();
 
 vi.mock("react-router-dom", () => ({
-  Link: ({ children, to, state }) => <a href={to} data-state={JSON.stringify(state)}>{children}</a>,
+  ...vi.importActual("react-router-dom"),
+  useNavigate: () => mockNavigate,
 }));
 
 
@@ -101,25 +103,27 @@ describe("FoodCard", () => {
     });
   });
 
-  it("renders Add to Cart links with correct state", async () => {
+it("navigates to /options with correct state when clicking Add to Cart", async () => {
   vi.spyOn(global, "fetch").mockResolvedValueOnce({
     ok: true,
     json: async () => mockMenu,
   });
 
-  render(<FoodCard cart={{}} setCart={vi.fn()} setCount={vi.fn()} />, { wrapper: createWrapper() });
+  render(<FoodCard cart={{}} setCart={vi.fn()} setCount={vi.fn()} />, {
+    wrapper: createWrapper(),
+  });
 
-  // get all Add to Cart buttons
-  const buttons = await screen.findAllByText("Add to Cart");
+  const buttons = await screen.findAllByRole("button", { name: /add .* to cart/i });
 
-  // loop through buttons and menu items
+  // click each Add to Cart button
   buttons.forEach((button, index) => {
-    const link = button.closest("a"); 
-    expect(link).toHaveAttribute("href", "/options");
-
-    const state = JSON.parse(link.dataset.state);
-    expect(state.item).toEqual(mockMenu.entrees[index]);
-    expect(state.menu).toEqual(mockMenu);
+    button.click();
+    expect(mockNavigate).toHaveBeenCalledWith("/options", {
+      state: {
+        item: mockMenu.entrees[index],
+        menu: mockMenu,
+      },
+    });
   });
 });
 });

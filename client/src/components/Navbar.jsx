@@ -7,7 +7,7 @@ const Navbar = ({ count, user, onLogout }) => {
 
   return (
     <nav className='navbar'>
-      <h1 className='navbar-title'>Title</h1>
+      <h1 className='navbar-title'>Order App</h1>
 
       <div className='hamburger' onClick={() => setIsOpen(!isOpen)}>
         <span></span>
@@ -32,7 +32,7 @@ const Navbar = ({ count, user, onLogout }) => {
         </li>
 
         {!user ? (
-          <li><Link to="/login">Login</Link></li>
+          <li className='login-btn'><Link to="/login">Login</Link></li>
         ) : (
           <>
             <li className='navbar-user'>Welcome, {user.email}</li>

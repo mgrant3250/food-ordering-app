@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import "./CheckoutCard.css";
 import PaymentForm from './payments/PaymentForm';
+import { postOrder } from '../api/order';
 import { getTotalItemCount } from '../utils/cartUtils';
 
 const CheckoutCard = ({ cart, setCart, count, setCount }) => {
@@ -35,17 +36,9 @@ const CheckoutCard = ({ cart, setCart, count, setCount }) => {
       total: parseFloat(totalWithTax.toFixed(2))
     };
 
-    try {
-      const response = await fetch('http://localhost:5000/api/order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(orderData)
-      });
-
-      const result = await response.json();
+    try{
+      const result = await postOrder(token, orderData)
+    
       if (result.success) {
         alert('Order placed successfully!');
         clearCart();

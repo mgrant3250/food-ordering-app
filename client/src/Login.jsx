@@ -1,6 +1,8 @@
-import {useState} from 'react'
+import {useState, useRef, useCallback} from 'react'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import { fetchLogin } from './api/auth';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({onLogin}) => {
@@ -8,44 +10,59 @@ const Login = ({onLogin}) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const navigate = useNavigate();
 
   const togglePassword = () => setShowPassword(prev => !prev);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!email && !password) {
       setError('Please enter both email and password.');
+      emailRef.current.focus();
       return;
+    }else if(!email){
+      setError('Please enter in an email')
+      emailRef.current.focus();
+      return
+    }else if(!password){
+      setError('Please enter in a password')
+      passwordRef.current.focus();
+      return
     }
 
+    setLoading(true);
+
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
+      const data = await fetchLogin(email, password);;
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
+      if (data.ok && data.success) {
         setError('');
         toast.success("Login Successful");
         const userData = {email: data.email, role: data.role}
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(userData)); 
-        onLogin?.(data); 
+        onLogin?.(data);
+        navigate("/") 
       } else {
-        toast.error("Login Failed");
+        console.error("Login Failed");
         setError(data.message || 'Login failed');
       }
     } catch (err) {
       console.error('Login error:', err);
       setError('Error connecting to the server.');
     }
+    setLoading(false);
   };
+
+  const handleChange = useCallback((e, callback) => {
+    callback(e.target.value.trim());
+    setError(prev => prev ? '' : prev)
+  }, [])
 
   return (
     <div className="login-container">
@@ -57,10 +74,11 @@ const Login = ({onLogin}) => {
         <label htmlFor='email'>Email:</label>
         <input
           id='email'
+          ref={emailRef}
           type="email"
           placeholder="you@example.com"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => handleChange(e, setEmail)}
           aria-required="true"
           aria-invalid={!!error}
         />
@@ -69,10 +87,11 @@ const Login = ({onLogin}) => {
         <div className='password-wrapper'>
         <input
           id='password'
+          ref={passwordRef}
           type={showPassword ? "text" : "password"}
           placeholder="••••••••"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => handleChange(e, setPassword)}
           aria-required="true"
           aria-invalid={!!error}
         />
@@ -87,7 +106,9 @@ const Login = ({onLogin}) => {
         </button>
         </div>
 
-        <button type="submit" className='submit'>Log In</button>
+        <button type="submit" className='submit' disabled={loading}>
+          {loading ? 'Logging in...' : 'Log In'}
+          </button>
 
         <p className="demo-info">
           <strong>Demo Login:</strong><br />

@@ -52,6 +52,16 @@
   background-color: var(--secondary-color);
 }
 
+.login-form .submit:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  color: #666; 
+}
+
+.login-form .submit:disabled:hover {
+  background-color: #ccc;
+}
+
 .error {
   background-color: #ffdddd;
   border-left: 4px solid #e53935;
