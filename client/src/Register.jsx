@@ -139,7 +139,7 @@ useEffect(() => {
           showToggle={true}
           showValue={showPassword}
           onToggle={togglePassword}
-          className="password-toggle"
+          className="password-toggles"
           onKeyDown={(e) => handleKeyDown(e, confirmPasswordRef)}
           placeholder="••••••••"
           aria-required="true"
@@ -155,7 +155,7 @@ useEffect(() => {
           showToggle={true}
           showValue={show}
           onToggle={toggleConfirm}
-          className="password-toggle"
+          className="password-toggles"
           placeholder="••••••••"
           aria-required="true"
           aria-invalid={!!error}

@@ -63,6 +63,24 @@
   transform: scale(0.98);
 }
 
+.admin-menu-container textarea {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  resize: vertical; 
+  min-height: 80px; 
+  max-height: 200px; 
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-menu-container textarea:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
 @media (max-width: 600px) {
   .admin-menu-container {
     width: 90%;

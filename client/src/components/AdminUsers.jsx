@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import "./AdminUsers.css";
+import { changeRole, getUsers, deleteUser } from "../api/user";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
-    const token = localStorage.getItem("token");
-
-    try {
-      const res = await fetch("http://localhost:5000/api/admin/users", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
+    try{
+      const data = await getUsers();
 
       if (data.success) setUsers(data.users);
     } catch (err) {
@@ -23,18 +19,9 @@ const AdminUsers = () => {
   };
 
   const handleRoleChange = async (id, newRole) => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await fetch(`http://localhost:5000/api/admin/user/${id}/role`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ role: newRole }),
-      });
+    try{
+      const data = await changeRole(id, newRole);
 
-      const data = await res.json();
       if (data.success) {
         alert("Role updated successfully");
         setUsers((prev) =>
@@ -52,13 +39,8 @@ const AdminUsers = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
-    const token = localStorage.getItem("token");
-    try {
-      const res = await fetch(`http://localhost:5000/api/admin/user/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
+    try{
+      const data = await deleteUser(id);
 
       if (data.success) {
         setUsers((prev) => prev.filter((u) => u._id !== id));

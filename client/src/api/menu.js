@@ -7,3 +7,16 @@ export const fetchMenu = async () => {
     }
     return response.json();
 }
+
+export const postMenu = async(token, formData) => {
+    const response = await fetch(API_ENDPOINTS.menu, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    },
+    body: formData
+  });
+
+  const data = await response.json();
+  return data
+}

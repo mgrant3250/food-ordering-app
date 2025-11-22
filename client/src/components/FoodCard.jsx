@@ -33,8 +33,6 @@ const { data: menu, isLoading, error, refetch } = useQuery({
   if (isLoading) return <p>Loading menu...</p>;
   
 
-  // if (error) return <p>Error loading menu.</p>;
-
   if (error)
   return (
     <div>

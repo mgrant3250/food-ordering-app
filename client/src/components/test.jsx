@@ -1,15 +1,12 @@
-import { useState } from 'react'
-import { useLocation } from 'react-router-dom';
-import Login from '../Login';
 import "../Login.css"
-// import "./test.css"
+import Login from "../Login"
 
 const Test = () => {
 
 
   return (
     <>
-       <Login></Login>
+      <Login />
     </>
   )
 }

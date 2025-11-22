@@ -20,6 +20,7 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err => console.error("MongoDB connection error:", err));
 
 app.use('/images', express.static('public/images'));
+app.use("/uploads", express.static("uploads"));
 
 
 

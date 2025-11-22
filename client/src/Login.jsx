@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { fetchLogin } from './api/auth';
 import 'react-toastify/dist/ReactToastify.css';
+import "./Login.css"
 
 const Login = ({onLogin}) => {
   const [email, setEmail] = useState('');

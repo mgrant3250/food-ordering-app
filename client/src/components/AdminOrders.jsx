@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
+import { getOrders } from "../api/order";
 import "./AdminOrders.css";
+
+
+const formatDate = (date) => new Date(date).toLocaleString();
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -7,13 +11,14 @@ const AdminOrders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/admin/orders", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      if (data.success) setOrders(data.orders);
-      setLoading(false);
+      try{
+        const data = await getOrders();
+        if (data.success) setOrders(data.orders);
+      }catch(err){
+        console.log(err)
+      }finally{
+        setLoading(false);
+      }
     };
 
     fetchOrders();
@@ -32,7 +37,7 @@ const AdminOrders = () => {
             <div className="order-card" key={order._id}>
               <p><strong>Email:</strong> {order.email}</p>
               <p><strong>Total:</strong> ${order.total}</p>
-              <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+              <p><strong>Date:</strong> {formatDate(order.createdAt)}</p>
               <ul>
                 {order.cart.map((item, i) => (
                   <li key={i}>

@@ -13,3 +13,17 @@ export const postOrder = async(token, orderData) => {
     return await response.json()
 
 }
+
+export const getOrders = async() => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(API_ENDPOINTS.adminOrder, {
+        headers: {Authorization: `Bearer ${token}`}
+    })
+
+    if(!response.ok){
+        throw new Error("failed to fetch orders")
+    }
+
+    const data = await response.json();
+    return data
+}

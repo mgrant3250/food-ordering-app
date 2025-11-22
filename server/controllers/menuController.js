@@ -17,8 +17,15 @@ exports.getMenu = async (req, res) => {
 
 exports.addMenuItem = async (req, res) => {
   try {
-    const newItem = new MenuItem(req.body);
+    let itemData = req.body;
+
+    if (req.file) {
+      itemData.imageUrl = "/uploads/" + req.file.filename;
+    }
+
+    const newItem = new MenuItem(itemData);
     await newItem.save();
+
     res.json({ success: true, message: "Menu item added successfully" });
   } catch (err) {
     console.error("Error adding menu item:", err);
