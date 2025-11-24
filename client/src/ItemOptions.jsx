@@ -1,32 +1,60 @@
 import {useState, useEffect, useCallback} from 'react'
 import { useLocation } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import "./ItemOptions.css"
-import { getTotalItemCount, updateCart} from './utils/cartUtils'
+import { addToCart as addToCartAction } from './store/cartSlice'
 
 
-const ItemOptions = ({cart, setCart, setCount}) => {
+const ItemOptions = ( ) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
     const { item, menu } = location.state || {};
+
+    useEffect(() => {
+    if (!item || !menu) {
+      navigate("/"); // go back to menu
+    }
+  }, [item, menu, navigate]);
   
     const [selectedSide, setSelectedSide] = useState('');
     const [selectedSauce, setSelectedSauce] = useState('');
     const [selectedDrink, setSelectedDrink] = useState('');
 
-     useEffect(() => {
-        setCount(getTotalItemCount(cart))
-      }, [cart])
+    const addToCart = () => {
+
+    if (!item) return;
+
+    const sidePrice = menu.sides?.find(s => s.name === selectedSide)?.price || 0;
+    const drinkPrice = menu.drinks?.find(d => d.name === selectedDrink) ? 1.99 : 0;
+
+    const cartItem = {
+      ...item,
+      cartItemId: item._id + "-" + selectedSide + "-" + selectedDrink + "-" + selectedSauce,
+      baseItem: {
+          _id: item._id,
+          name: item.name,
+          price: item.price,
+          imageUrl: item.imageUrl
+      },
+      options: {
+      side: selectedSide,
+      sauce: selectedSauce,
+      drink: selectedDrink
+      },
+      quantity: 1,
+      totalPrice: item.price + sidePrice + drinkPrice
+    };
+
+    dispatch(addToCartAction(cartItem));
+    navigate("/");
+  };
+
+  if(!item) return null
     
-    
-    
-      const addToCart = () => {
-        setCart(prevCart =>
-        updateCart(prevCart, item, selectedDrink, selectedSide, menu)
-  );
-        navigate("/")
-};
   
     return (
       <>
@@ -88,7 +116,7 @@ const ItemOptions = ({cart, setCart, setCount}) => {
           <p><strong>Drink:</strong> {selectedDrink || 'None'}</p>
         </div>
 
-        <button type="submit" onClick={() => addToCart(item, selectedDrink, selectedSide, menu)} className="submit-button">Add to Order</button>
+        <button type="submit" onClick={addToCart} className="submit-button">Add to Order</button>
       </div>
       </>
     )

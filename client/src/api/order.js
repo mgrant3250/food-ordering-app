@@ -16,6 +16,7 @@ export const postOrder = async(token, orderData) => {
 
 export const getOrders = async() => {
     const token = localStorage.getItem("token");
+    console.log(token)
     const response = await fetch(API_ENDPOINTS.adminOrder, {
         headers: {Authorization: `Bearer ${token}`}
     })

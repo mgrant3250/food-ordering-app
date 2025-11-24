@@ -1,13 +1,13 @@
-import { useEffect } from 'react'
 import { useQuery } from "@tanstack/react-query"
-import { getTotalItemCount } from '../utils/cartUtils'
 import { getImageUrl } from '../utils/image'
 import { fetchMenu } from '../api/menu'
 import './FoodCard.css'
 import { useNavigate } from 'react-router-dom'
+import FoodCardText from './FoodCardText'
+import { useSelector } from "react-redux";
 
 
-const FoodCard = ({cart, setCount}) => {
+const FoodCard = () => {
 
   const navigate = useNavigate();
 
@@ -24,9 +24,9 @@ const { data: menu, isLoading, error, refetch } = useQuery({
     navigate('/options', { state: { item, menu } });
   }
 
-  useEffect(() => {
-    setCount(getTotalItemCount(cart))
-  }, [cart])
+
+const cart = useSelector(state => state.cart ?? { items: [] }); // get cart slice
+const totalCount = cart?.items?.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
 
 
@@ -44,7 +44,7 @@ const { data: menu, isLoading, error, refetch } = useQuery({
   return (
     <>
     <div className='food-card-container'>
-    {menu.entrees.map((item) => (
+    {menu?.entrees?.map((item) => (
     <div key={item?._id} className="food-card">
         <div className="food-card-image">
           <img 
@@ -53,9 +53,7 @@ const { data: menu, isLoading, error, refetch } = useQuery({
           loading="lazy" />
         </div>
         <h2 className="food-card-title">{item?.name}</h2>
-        <div className="food-card-text">
-          {item.description}
-        </div>
+        <FoodCardText text={item.description} maxLength={150} />
         <div className="food-card-price">
           <span>${item.price}</span>
           <button onClick={() => handleAddToCart(item) } aria-label={`Add ${item.name} to cart`}>Add to Cart</button>

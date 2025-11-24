@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { getOrders } from "../api/order";
 import "./AdminOrders.css";
 
-
-const formatDate = (date) => new Date(date).toLocaleString();
+const formatDate = (date) => {
+  if (!date) return "Unknown date";
+  return new Date(date).toLocaleString();
+};
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -11,12 +13,12 @@ const AdminOrders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      try{
+      try {
         const data = await getOrders();
-        if (data.success) setOrders(data.orders);
-      }catch(err){
-        console.log(err)
-      }finally{
+        if (data.success) setOrders(data.orders || []);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+      } finally {
         setLoading(false);
       }
     };
@@ -35,15 +37,23 @@ const AdminOrders = () => {
         <div className="orders-grid">
           {orders.map((order) => (
             <div className="order-card" key={order._id}>
-              <p><strong>Email:</strong> {order.email}</p>
-              <p><strong>Total:</strong> ${order.total}</p>
+              <p><strong>Email:</strong> {order.email || "Unknown"}</p>
+              <p><strong>Total:</strong> ${Number(order.total || 0).toFixed(2)}</p>
               <p><strong>Date:</strong> {formatDate(order.createdAt)}</p>
               <ul>
-                {order.cart.map((item, i) => (
-                  <li key={i}>
-                    {item.quantity}× {item.baseItem} ({item.side || "No side"})
-                  </li>
-                ))}
+                {order.cart?.map((item) => {
+                  const baseName = item.baseItem?.name || "Unknown item";
+                  const side = item.options?.side || "None";
+                  const sauce = item.options?.sauce || "None";
+                  const drink = item.options?.drink || "None";
+                  const quantity = item.quantity || 1;
+
+                  return (
+                    <li key={item.cartItemId || Math.random()}>
+                      {quantity}× {baseName} (Side: {side}, Sauce: {sauce}, Drink: {drink})
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

@@ -55,9 +55,9 @@ function App() {
         <Navbar count={count} user={user} onLogout={handleLogout}/>
         <Suspense fallback={<div className='loading'>Loading</div>}>
         <Routes>
-          <Route path="/" element={<FoodCard cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
-          <Route path="/checkout" element={<Checkout cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
-          <Route path="/options" element={<ItemOptions cart={cart} setCart={setCart} count={count} setCount={setCount}/>} />
+          <Route path="/" element={<FoodCard/>} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/options" element={<ItemOptions />} />
           <Route path="/login" element={<Login onLogin={(userData) => setUser(userData)}/>} />
           <Route path="/register" element={<Register />} />
 

@@ -32,3 +32,42 @@ exports.addMenuItem = async (req, res) => {
     res.status(500).json({ success: false, message: "Error adding item" });
   }
 };
+
+exports.updateMenuItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let updateData = req.body;
+
+    if (req.file) {
+      updateData.imageUrl = "/uploads/" + req.file.filename;
+    }
+
+    const updatedItem = await MenuItem.findByIdAndUpdate(id, updateData, { new: true });
+
+    if (!updatedItem) {
+      return res.status(404).json({ success: false, message: "Item not found" });
+    }
+
+    res.json({ success: true, message: "Menu item updated", item: updatedItem });
+  } catch (err) {
+    console.error("Error updating menu item:", err);
+    res.status(500).json({ success: false, message: "Error updating item" });
+  }
+};
+
+exports.deleteMenuItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedItem = await MenuItem.findByIdAndDelete(id);
+
+    if (!deletedItem) {
+      return res.status(404).json({ success: false, message: "Item not found" });
+    }
+
+    res.json({ success: true, message: "Menu item deleted" });
+  } catch (err) {
+    console.error("Error deleting menu item:", err);
+    res.status(500).json({ success: false, message: "Error deleting item" });
+  }
+};

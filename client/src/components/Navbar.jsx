@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './NavBar.css';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const Navbar = ({ count, user, onLogout }) => {
+const Navbar = ({ user, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const cart = useSelector(state => state.cart ||  { items: [] });
+  const totalCount = cart?.items?.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   return (
     <nav className='navbar'>
@@ -27,7 +31,7 @@ const Navbar = ({ count, user, onLogout }) => {
         <li>
           <Link to="/checkout" className='cart-icon-wrapper'>
             <i className="fa-solid fa-cart-shopping"></i>
-            <span className='cart-count-badge'>{count}</span>
+            {totalCount > 0 && <span className='cart-count-badge'>{totalCount}</span>}
           </Link>
         </li>
 

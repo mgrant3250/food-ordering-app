@@ -52,7 +52,7 @@ const PaymentForm = ({ amount, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit}>
       <CardElement />
-      <button type="submit" disabled={!stripe || loading}>
+      <button type="submit" disabled={!stripe || loading} className="payment-submit">
         Pay ${(amount / 100).toFixed(2)}
       </button>
     </form>

@@ -1,29 +1,29 @@
-import { useState } from 'react';
 import "./CheckoutCard.css";
+import { useSelector, useDispatch } from 'react-redux';
 import PaymentForm from './payments/PaymentForm';
 import { postOrder } from '../api/order';
-import { getTotalItemCount } from '../utils/cartUtils';
+import { removeFromCart, clearCart } from '../store/cartSlice';
 
-const CheckoutCard = ({ cart, setCart, count, setCount }) => {
+const CheckoutCard = () => {
   const TAX_RATE = 0.07;
 
-  const subtotal = Object.values(cart).reduce(
-    (sum, item) => sum + item.price * item.quantity,
+  const cart = useSelector(state => state.cart ?? { items: [] }); // get cart slice
+  const dispatch = useDispatch();
+
+
+  const subtotal = cart?.items?.reduce(
+    (sum, item) => sum + item.totalPrice * item.quantity,
     0
-  );
+  ) || 0;
 
   const totalWithTax = subtotal + subtotal * TAX_RATE;
 
-  const removeItem = (itemName) => {
-    const newCart = { ...cart };
-    delete newCart[itemName];
-    setCart(newCart);
-    setCount(getTotalItemCount(newCart));
+   const handleRemove = (id) => {
+    dispatch(removeFromCart(id)); 
   };
 
-  const clearCart = () => {
-    setCart({});
-    setCount(0);
+    const handleClear = () => {
+    dispatch(clearCart());
   };
 
   const handleOrderSuccess = async () => {
@@ -32,7 +32,13 @@ const CheckoutCard = ({ cart, setCart, count, setCount }) => {
 
     const orderData = {
       email: user.email, 
-      cart: Object.values(cart),
+      cart: cart.items.map(i => ({
+      cartItemId: i.cartItemId,
+      baseItem: i.baseItem,
+      options: i.options,
+      quantity: i.quantity,
+      totalPrice: i.totalPrice
+  })),
       total: parseFloat(totalWithTax.toFixed(2))
     };
 
@@ -41,7 +47,7 @@ const CheckoutCard = ({ cart, setCart, count, setCount }) => {
     
       if (result.success) {
         alert('Order placed successfully!');
-        clearCart();
+        dispatch(clearCart())
       } else {
         alert('Failed to place order.');
       }
@@ -61,15 +67,17 @@ const CheckoutCard = ({ cart, setCart, count, setCount }) => {
                <span>Quantity</span>
                 <span>Actions</span>
             </div>
-            {Object.entries(cart).map(([key, value]) => (
-                <div key={key} className="cart-row">
+            {cart?.items?.map((item) => (
+                <div key={item._id} className="cart-row">
                     <span>
-                      {value.baseItem} <br />
-                      <small>Side: {value.side || 'None'} | Drink: {value.drink || 'None'}</small>
+                      {item.name} <br />
+                      <small>Side: {item.options?.side || 'None'} 
+                        | Drink: {item.options?.drink || 'None'} 
+                        | Sauce: {item.options?.sauce}</small>
                     </span>
-                    <span>${(value.price * value.quantity).toFixed(2)}</span>
-                    <span>{value.quantity}</span>
-                    <button onClick={() => removeItem(key)} className='remove-btn'>Remove Item</button>
+                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => handleRemove(item.cartItemId)} className='remove-btn'>Remove Item</button>
                 </div>
             ))}
         </div>
@@ -87,7 +95,7 @@ const CheckoutCard = ({ cart, setCart, count, setCount }) => {
         onSuccess={handleOrderSuccess}
       />
 
-      <button onClick={clearCart} className='clear-btn'>Clear Cart</button>
+      <button onClick={handleClear} className='clear-btn'>Clear Cart</button>
     </div>
   );
 };

@@ -81,6 +81,89 @@
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
 }
 
+.submit{
+  background-color: var(--primary-color);
+}
+
+.submit:hover{
+  background-color: var(--secondary-color);
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* --- INDIVIDUAL MENU ITEM CARD --- */
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.menu-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* --- ITEM TEXT --- */
+.menu-item strong {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.menu-item span {
+  font-size: 0.95rem;
+  color: #777;
+}
+
+/* --- ACTION BUTTON WRAPPER --- */
+.menu-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* --- EDIT BUTTON --- */
+.menu-actions button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+/* Edit button */
+.menu-actions button:first-child {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.menu-actions button:first-child:hover {
+  background-color: #357ac9;
+}
+
+/* Delete button */
+.menu-actions button:last-child {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.menu-actions button:last-child:hover {
+  background-color: #c0392b;
+}
+
 @media (max-width: 600px) {
   .admin-menu-container {
     width: 90%;

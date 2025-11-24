@@ -83,6 +83,21 @@
   background-color: var(--secondary-color);
 }
 
+.read-more-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: 5px;
+  padding: 0;
+}
+
+.read-more-btn:hover {
+  color: var(--secondary-color);
+}
+
 @keyframes fadeIn {
   to {
     opacity: 1;

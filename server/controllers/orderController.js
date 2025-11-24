@@ -9,7 +9,26 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid order data" });
     }
 
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    // Map cart items to match schema
+    const formattedCart = cart.map(item => ({
+      cartItemId: item.cartItemId,
+      baseItem: {
+        _id: item.baseItem._id,
+        name: item.baseItem.name,
+        price: item.baseItem.price,
+        imageUrl: item.baseItem.imageUrl || ""
+      },
+      options: {
+        side: item.side || "",
+        sauce: item.sauce || "",
+        drink: item.drink || ""
+      },
+      quantity: item.quantity,
+      totalPrice: item.price
+    }));
+
+    const total = cart.reduce((sum, item) => sum + item.totalPrice * item.quantity, 0);
+
     const newOrder = new Order({ email, cart, total });
 
     await newOrder.save();
