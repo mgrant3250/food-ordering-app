@@ -187,7 +187,7 @@ const AdminMenu = () => {
     setPrice(item.price);
     setType(item.type);
     setDescription(item.description);
-    setImage(null); // Keep old image unless changed
+    setImage(null);
   };
 
   // Delete an item

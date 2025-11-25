@@ -14,12 +14,12 @@ export const postOrder = async(token, orderData) => {
 
 }
 
-export const getOrders = async() => {
+export const getOrders = async(signal) => {
     const token = localStorage.getItem("token");
-    console.log(token)
     const response = await fetch(API_ENDPOINTS.adminOrder, {
-        headers: {Authorization: `Bearer ${token}`}
-    })
+        headers: {Authorization: `Bearer ${token}`},
+        signal,
+    });
 
     if(!response.ok){
         throw new Error("failed to fetch orders")
@@ -27,4 +27,4 @@ export const getOrders = async() => {
 
     const data = await response.json();
     return data
-}
+};

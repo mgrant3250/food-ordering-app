@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AdminMenu from "./components/AdminMenu";
-import AdminOrders from "./components/AdminOrders";
+import AdminOrders from "./components/AdminOrders/AdminOrders";
 import AdminUsers from "./components/AdminUsers";
 import "./AdminDashboard.css";
 

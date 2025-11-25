@@ -68,14 +68,14 @@ const CheckoutCard = () => {
                 <span>Actions</span>
             </div>
             {cart?.items?.map((item) => (
-                <div key={item._id} className="cart-row">
+                <div key={item.cartItemId} className="cart-row">
                     <span>
-                      {item.name} <br />
+                      {item.baseItem.name} <br />
                       <small>Side: {item.options?.side || 'None'} 
                         | Drink: {item.options?.drink || 'None'} 
                         | Sauce: {item.options?.sauce}</small>
                     </span>
-                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>${(item.totalPrice * item.quantity).toFixed(2)}</span>
                     <span>{item.quantity}</span>
                     <button onClick={() => handleRemove(item.cartItemId)} className='remove-btn'>Remove Item</button>
                 </div>
@@ -87,7 +87,7 @@ const CheckoutCard = () => {
             <span>Tax:</span>
             <span>${(subtotal * TAX_RATE).toFixed(2)}</span>
             <span>Subtotal: </span>
-            <span>${(subtotal + subtotal * TAX_RATE).toFixed(2)}</span>
+            <span>${(totalWithTax).toFixed(2)}</span>
         </div>
 
       <PaymentForm

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./AdminUsers.css";
 import { changeRole, getUsers, deleteUser } from "../api/user";
+import Spinner from "./Spinner";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -58,7 +59,7 @@ const AdminUsers = () => {
     fetchUsers();
   }, []);
 
-  if (loading) return <p>Loading users...</p>;
+  if (loading) return <Spinner />;
 
   return (
     <div className="admin-users-container">
