@@ -1,50 +1,57 @@
-import { useQuery } from "@tanstack/react-query"
+import { useEffect, useCallback } from "react"
 import { getImageUrl } from '../utils/image'
-import { fetchMenu } from '../api/menu'
 import './FoodCard.css'
 import { useNavigate } from 'react-router-dom'
 import FoodCardText from './FoodCardText'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { loadMenu } from "../store/menuSlice"
+import Spinner from "./Spinner"
 
 
 const FoodCard = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+   const { entrees, drinks, sides, sauces, loading, error } = useSelector((state) => state.menu);
+
+    useEffect(() => {
+    dispatch(loadMenu());
+  }, [dispatch]);
 
 
-const { data: menu, isLoading, error, refetch } = useQuery({
-    queryKey: ["menu"],     // unique cache key
-    queryFn: fetchMenu,     // fetch function
-    staleTime: 1000 * 60 * 5,   // 5 minutes 
-    cacheTime: 1000 * 60 * 30,  // 30 minutes in memory
-  });
+// const { data: menu, isLoading, error, refetch } = useQuery({
+//     queryKey: ["menu"],     // unique cache key
+//     queryFn: fetchMenu,     // fetch function
+//     staleTime: 1000 * 60 * 5,   // 5 minutes 
+//     cacheTime: 1000 * 60 * 30,  // 30 minutes in memory
+//   });
 
 
-  const handleAddToCart = (item) => {
-    navigate('/options', { state: { item, menu } });
-  }
+  const handleAddToCart = useCallback((item) => {
+    navigate('/options', { state: { item, menu: { entrees, drinks, sides, sauces } } });
+  }, [navigate, entrees, drinks, sides, sauces])
 
+if(loading) return <Spinner />
 
-const cart = useSelector(state => state.cart ?? { items: [] }); // get cart slice
-const totalCount = cart?.items?.reduce((sum, item) => sum + (item.quantity || 1), 0);
-
-
-
-  if (isLoading) return <p>Loading menu...</p>;
+if (!loading && entrees?.length === 0)
+  return <p>No menu items available.</p>;
   
 
   if (error)
   return (
     <div>
       <p>Error loading menu.</p>
-      <button onClick={() => refetch()}>Retry</button>
+      <button onClick={() => dispatch(loadMenu())}>
+        Retry
+      </button>
     </div>
   );
 
   return (
     <>
     <div className='food-card-container'>
-    {menu?.entrees?.map((item) => (
+    {entrees.map((item) => (
     <div key={item?._id} className="food-card">
         <div className="food-card-image">
           <img 

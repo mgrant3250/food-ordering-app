@@ -26,6 +26,7 @@ const saveState = (state) => {
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
+    menu: menuReducer
   },
   preloadedState: loadState(),
 });
