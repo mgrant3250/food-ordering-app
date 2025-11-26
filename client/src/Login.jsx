@@ -1,21 +1,31 @@
-import {useState, useRef, useCallback} from 'react'
+import {useState, useRef, useCallback, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { fetchLogin } from './api/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from './store/authSlice';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Login.css"
 
-const Login = ({onLogin}) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { loading, error, token } = useSelector((state) => state.auth);
+
+   useEffect(() => {
+    if (token) {
+      toast.success("Login Successful");
+      navigate("/");
+    }
+  }, [token, navigate]);
 
   const togglePassword = () => setShowPassword(prev => !prev);
 
@@ -23,47 +33,25 @@ const Login = ({onLogin}) => {
     e.preventDefault();
 
     if (!email && !password) {
-      setError('Please enter both email and password.');
+      toast.error("Please enter both email and password")
       emailRef.current.focus();
       return;
     }else if(!email){
-      setError('Please enter in an email')
+      toast.error("Please enter email")
       emailRef.current.focus();
       return
     }else if(!password){
-      setError('Please enter in a password')
+      toast.error("Please enter password");
       passwordRef.current.focus();
       return
     }
 
-    setLoading(true);
-
-    try {
-      const data = await fetchLogin(email, password);;
-
-      if (data.ok && data.success) {
-        setError('');
-        toast.success("Login Successful");
-        const userData = {email: data.email, role: data.role}
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(userData)); 
-        onLogin?.(data);
-        navigate("/") 
-      } else {
-        console.error("Login Failed");
-        setError(data.message || 'Login failed');
-      }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError('Error connecting to the server.');
-    }
-    setLoading(false);
+    dispatch(loginUser({ email, password }));
   };
 
-  const handleChange = useCallback((e, callback) => {
+   const handleChange = useCallback((e, callback) => {
     callback(e.target.value.trim());
-    setError(prev => prev ? '' : prev)
-  }, [])
+  }, []);
 
   return (
     <div className="login-container">

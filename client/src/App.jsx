@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import { lazy, Suspense } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from './store/authSlice';
 
 const FoodCard = lazy(() => import("./components/FoodCard"))
 const ItemOptions = lazy(() => import("./ItemOptions"))
@@ -13,52 +15,30 @@ const AdminDashboard = lazy(() => import("./AdminDashboard"))
 
 
 function App() {
-  const[cart, setCart] = useState({});
-  const[count, setCount] = useState(0);
-  const [user, setUser] = useState(null)
-  const hasMounted = useRef(false);
 
   const queryClient = new QueryClient();
 
-  useEffect(() => {
-  const storedCart = localStorage.getItem('cart');
-  if (storedCart) {
-    setCart(JSON.parse(storedCart));
-  }
+  const user = useSelector(state => state.auth.user);
+  const dispatch = useDispatch();
+  const isAdmin = user?.role === 'admin';
 
-  const storedUser = localStorage.getItem('user');
-  if (storedUser) setUser(JSON.parse(storedUser));
+const handleLogout = () => {
+  dispatch(logout());
+  alert('You have been logged out.');
+};
 
-}, []);
-
-  useEffect(() => {
-    if(hasMounted.current){
-  localStorage.setItem('cart', JSON.stringify(cart));
-    }else{
-      hasMounted.current = true
-    }
-}, [cart]);
-
- const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    alert('You have been logged out.');
-  };
-
-  const isAdmin = user?.role === "admin";
 
   return (
     <>
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Navbar count={count} user={user} onLogout={handleLogout}/>
+        <Navbar onLogout={handleLogout}/>
         <Suspense fallback={<div className='loading'>Loading</div>}>
         <Routes>
           <Route path="/" element={<FoodCard/>} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/options" element={<ItemOptions />} />
-          <Route path="/login" element={<Login onLogin={(userData) => setUser(userData)}/>} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
           <Route 
