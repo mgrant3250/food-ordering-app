@@ -10,6 +10,6 @@ export const API_ENDPOINTS = {
   adminOrder: `${API_URL}/api/admin/orders`,
   changeRole: (id) =>  `${API_URL}/api/admin/user/${id}/role`,
   AdminUsers: (id) =>`${API_URL}/api/admin/users/${id ? id : ""}`,
-  deleteUser: (id) => `${API_URL}/api/admin/user/${id}`
-  
+  deleteUser: (id) => `${API_URL}/api/admin/user/${id}`,
+  forgotPassword: `${API_URL}/api/forgot-password`
 };

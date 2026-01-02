@@ -1,10 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchLogin } from "../api/auth";
+import { fetchForgotPassword } from "../api/auth";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }) => {
     const response = await fetchLogin(email, password);
+    return response;
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (email) => {
+    const response = await fetchForgotPassword(email);
     return response;
   }
 );
@@ -16,6 +25,7 @@ const authSlice = createSlice({
     token: localStorage.getItem("token") || null,
     loading: false,
     error: null,
+    forgotPasswordMessage: null,
   },
   reducers: {
     logout(state) {
@@ -24,6 +34,10 @@ const authSlice = createSlice({
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
+
+    clearForgotMessage(state) {
+      state.forgotPasswordMessage = null;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -50,9 +64,30 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state) => {
         state.loading = false;
         state.error = "Server error";
+      })
+
+        .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.forgotPasswordMessage = null;
+      })
+
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.loading = false;
+
+        if (action.payload.success) {
+          state.forgotPasswordMessage = action.payload.message;
+        } else {
+          state.error = action.payload.message;
+        }
+      })
+
+      .addCase(forgotPassword.rejected, (state) => {
+        state.loading = false;
+        state.error = "Failed to send reset email";
       });
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearForgotMessage } = authSlice.actions;
 export default authSlice.reducer;

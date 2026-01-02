@@ -1,10 +1,9 @@
 import {useState, useRef, useCallback, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from './store/authSlice';
-import 'react-toastify/dist/ReactToastify.css';
 import "./Login.css"
 
 const Login = () => {
@@ -22,8 +21,9 @@ const Login = () => {
 
    useEffect(() => {
     if (token) {
-      toast.success("Login Successful");
-      navigate("/");
+    toast.success("Login Successful", { autoClose: 3000, closeOnClick: true });
+    const timer = setTimeout(() => navigate("/"), 200);
+    return () => clearTimeout(timer);
     }
   }, [token, navigate]);
 
@@ -107,10 +107,11 @@ const Login = () => {
 
         <div className="account-links">
           <Link to="/register" aria-label='Create a new acount'>Create Account</Link>
-          <a href='#' aria-label='Reset your password'>Forgot Password?</a>
+          <Link to="/forgot-password" aria-label="Reset your password">
+            Forgot Password?
+          </Link>
         </div>
       </form>
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './store/authSlice';
+import { toast, ToastContainer } from 'react-toastify';
 
 const FoodCard = lazy(() => import("./components/FoodCard"))
 const ItemOptions = lazy(() => import("./ItemOptions"))
@@ -12,6 +13,8 @@ const Checkout = lazy(() => import("./Checkout"))
 const Register = lazy(() => import("./Register"))
 const Login = lazy(() => import("./Login"))
 const AdminDashboard = lazy(() => import("./AdminDashboard"))
+const ForgotPassword = lazy(() => import("./ForgotPassword"))
+const ResetPassword = lazy(() => import("./ResetPassword"))
 
 
 function App() {
@@ -24,7 +27,7 @@ function App() {
 
 const handleLogout = () => {
   dispatch(logout());
-  alert('You have been logged out.');
+  toast.success('You have been logged out.');
 };
 
 
@@ -40,6 +43,8 @@ const handleLogout = () => {
           <Route path="/options" element={<ItemOptions />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           <Route 
           path="/admin" 
@@ -48,6 +53,17 @@ const handleLogout = () => {
 
         </Routes>
       </Suspense>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       </Router>
       </QueryClientProvider>
     </>

@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
 
-const Navbar = () => {
+const Navbar = ({ onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const cart = useSelector(state => state.cart ||  { items: [] });
   const totalCount = cart?.items?.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   const user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   return (
     <nav className='navbar'>
@@ -46,7 +46,7 @@ const Navbar = () => {
             <li className='navbar-user'>Welcome, {user.email}</li>
             <li>
               {/* <button onClick={onLogout} className="logout-btn">Logout</button> */}
-              <button onClick={() => dispatch(logout())} className="logout-btn">Logout</button>
+              <button onClick={onLogout} className="logout-btn">Logout</button>
 
             </li>
           </>

@@ -7,7 +7,7 @@ import AdminDashboard from "./AdminDashboard";
 vi.mock("./components/AdminMenu", () => ({
   default: () => <div data-testid="admin-menu">AdminMenu Component</div>,
 }));
-vi.mock("./components/AdminOrders", () => ({
+vi.mock("./components/AdminOrders/AdminOrders", () => ({
   default: () => <div data-testid="admin-orders">AdminOrders Component</div>,
 }));
 vi.mock("./components/AdminUsers", () => ({
