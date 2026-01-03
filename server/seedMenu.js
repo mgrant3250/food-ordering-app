@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 const MenuItem = require("./models/MenuItem");
 
-mongoose.connect('mongodb://localhost:27017/foodAppDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect('mongodb://localhost:27017/foodAppDB')
 .then(() => {
   console.log("MongoDB connected...");
   return seedMenuItems();
