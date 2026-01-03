@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const InputField = React.forwardRef(({
+  id,
   label,
   type = "text",
   value,
@@ -14,9 +15,10 @@ export const InputField = React.forwardRef(({
   ...props
 }, ref) => (
   <div className="input-wrapper">
-    <label>{label}</label>
+    <label htmlFor={id}>{label}</label>
     <div className="password-wrapper">
       <input
+        id={id}
         type={showToggle ? (showValue ? "text" : "password") : type}
         value={value}
         onChange={onChange}

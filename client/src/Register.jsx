@@ -116,6 +116,7 @@ useEffect(() => {
         {success && <div className="success">{success}</div>}
 
         <InputField
+          id="email"
           label="Email"
           type="email"
           value={email}
@@ -131,6 +132,7 @@ useEffect(() => {
         />    
 
         <InputField
+          id="password"
           label="Password"
           type="password"
           value={password}
@@ -147,6 +149,7 @@ useEffect(() => {
         />
 
         <InputField
+          id="confirmPassword"
           label="Confirm Password"
           type="password"
           value={confirmPassword}
