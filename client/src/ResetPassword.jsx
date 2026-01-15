@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { resetPassword } from "./api/auth";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -9,13 +10,7 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch(`http://localhost:5000/api/reset-password/${token}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
-    });
-
-    const data = await res.json();
+    const data = await resetPassword(token, password)
 
     if (data.success) {
       toast.success("Password reset successful. You can now log in.");

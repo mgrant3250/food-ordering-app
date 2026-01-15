@@ -10,5 +10,6 @@ export const API_ENDPOINTS = {
   AdminUsers: (id) =>`${API_URL}/api/admin/users/${id ? id : ""}`,
   deleteUser: (id) => `${API_URL}/api/admin/user/${id}`,
   forgotPassword: `${API_URL}/api/forgot-password`,
-  payment: `${API_URL}/api/create-payment-intent`
+  payment: `${API_URL}/api/create-payment-intent`,
+  resetPassword: `${API_URL}/api/reset-password`
 };

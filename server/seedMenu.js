@@ -17,24 +17,28 @@ async function seedMenuItems() {
       {
         name: "Hamburger",
         type: "entree",
+        description: "A juicy grilled beef patty served on a toasted bun with crisp lettuce, ripe tomato, and our signature house sauce.",
         price: 6.99,
         imageUrl: "/images/hamburger.jpg"
       },
       {
         name: "Chicken Tenders",
         type: "entree",
+        description: "Tender strips of chicken, lightly seasoned and fried to a crisp golden finish, served with your favorite house-made sauces.",
         price: 5.99,
         imageUrl: "/images/chicken-tenders.jpg"
       },
       {
         name: "Chicken Sandwich",
         type: "entree",
+        description: "Succulent grilled chicken on a toasted artisan bun, topped with fresh greens, ripe tomato, and a house-made sauce for a flavorful twist.",
         price: 6.99,
         imageUrl: "/images/chicken-sandwhich.jpg"
       },
       {
         name: "Chicken Wings",
         type: "entree",
+        description: "Oven-roasted wings with a crisp exterior and juicy interior, served with your choice of signature sauce for maximum flavor.",
         price: 4.99,
         imageUrl: "/images/chicken-wings.jpg"
       },

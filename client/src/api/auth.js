@@ -36,3 +36,14 @@ export async function fetchForgotPassword(email) {
 
   return res.json();
 }
+
+export async function resetPassword(token, password) {
+  const res = await fetch(API_ENDPOINTS.resetPassword, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({password, token})
+
+  })
+
+  return res.json();
+}
