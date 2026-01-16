@@ -1,7 +1,9 @@
+require("dotenv").config();
+
 const mongoose = require("mongoose");
 const MenuItem = require("./models/MenuItem");
 
-mongoose.connect('mongodb://localhost:27017/foodAppDB')
+mongoose.connect(process.env.MONGO_URI)
 .then(() => {
   console.log("MongoDB connected...");
   return seedMenuItems();
