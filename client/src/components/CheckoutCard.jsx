@@ -1,101 +1,145 @@
 import "./CheckoutCard.css";
-import { useSelector, useDispatch } from 'react-redux';
-import PaymentForm from './payments/PaymentForm';
-import { postOrder } from '../api/order';
-import { removeFromCart, clearCart } from '../store/cartSlice';
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import PaymentForm from "./payments/PaymentForm";
+import { postOrder } from "../api/order";
+import { removeFromCart, clearCart } from "../store/cartSlice";
+import { toast } from 'react-toastify';
+import { toastOptions } from "../utils/toastOptions";
+
+const TAX_RATE = 0.07;
 
 const CheckoutCard = () => {
-  const TAX_RATE = 0.07;
-
-  const cart = useSelector(state => state.cart ?? { items: [] }); // get cart slice
   const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const cart = useSelector((state) => state.cart ?? { items: [] });
+  const items = cart.items ?? [];
 
-  const subtotal = cart?.items?.reduce(
+  
+  const subtotal = items.reduce(
     (sum, item) => sum + item.totalPrice * item.quantity,
     0
-  ) || 0;
+  );
 
-  const totalWithTax = subtotal + subtotal * TAX_RATE;
+  const tax = subtotal * TAX_RATE;
+  const total = subtotal + tax;
 
-   const handleRemove = (id) => {
-    dispatch(removeFromCart(id)); 
+  
+  const handleRemoveItem = (cartItemId) => {
+    dispatch(removeFromCart(cartItemId));
   };
 
-    const handleClear = () => {
+  const handleClearCart = () => {
     dispatch(clearCart());
   };
 
   const handleOrderSuccess = async () => {
-    const token = localStorage.getItem('token'); 
-    const user = JSON.parse(localStorage.getItem('user')); 
+    if(isSubmitting) return;
+    setIsSubmitting(true);
+
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
+    if (!token || !storedUser) {
+      toast.error("You must be logged in to place an order.", toastOptions);
+      setIsSubmitting(false)
+      return;
+    }
+
+    const user = JSON.parse(storedUser);
 
     const orderData = {
-      email: user.email, 
-      cart: cart.items.map(i => ({
-      cartItemId: i.cartItemId,
-      baseItem: i.baseItem,
-      options: i.options,
-      quantity: i.quantity,
-      totalPrice: i.totalPrice
-  })),
-      total: parseFloat(totalWithTax.toFixed(2))
+      email: user.email,
+      cart: items.map((item) => ({
+        cartItemId: item.cartItemId,
+        baseItem: item.baseItem,
+        options: item.options,
+        quantity: item.quantity,
+        totalPrice: item.totalPrice,
+      })),
+      total: Number(total.toFixed(2)),
     };
 
-    try{
-      const result = await postOrder(token, orderData)
-    
-      if (result.success) {
-        alert('Order placed successfully!');
-        dispatch(clearCart())
+    try {
+      const result = await postOrder(token, orderData);
+
+      if (result?.success) {
+        toast.success("Order placed successfully!", toastOptions);
+        dispatch(clearCart());
       } else {
-        alert('Failed to place order.');
+        toast.error("Failed to place order.", toastOptions);
       }
     } catch (error) {
-      console.error('Order error:', error);
-      alert('Error placing order.');
+      console.error("Order error:", error);
+      toast.error("Error placing order.", toastOptions);
+    }finally{
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div>
-      
       <div className="cart">
-            <div className="table-head">
-                <span>Item</span>
-                <span>Price</span>
-               <span>Quantity</span>
-                <span>Actions</span>
-            </div>
-            {cart?.items?.map((item) => (
-                <div key={item.cartItemId} className="cart-row">
-                    <span>
-                      {item.baseItem.name} <br />
-                      <small>Side: {item.options?.side || 'None'} 
-                        | Drink: {item.options?.drink || 'None'} 
-                        | Sauce: {item.options?.sauce}</small>
-                    </span>
-                    <span>${(item.totalPrice * item.quantity).toFixed(2)}</span>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => handleRemove(item.cartItemId)} className='remove-btn'>Remove Item</button>
-                </div>
-            ))}
+        <div className="table-head">
+          <span>Item</span>
+          <span>Price</span>
+          <span>Quantity</span>
+          <span>Actions</span>
         </div>
-        <div className="subtotal-container">
-            <span>Total:</span>
-            <span>${subtotal.toFixed(2)}</span>
-            <span>Tax:</span>
-            <span>${(subtotal * TAX_RATE).toFixed(2)}</span>
-            <span>Subtotal: </span>
-            <span>${(totalWithTax).toFixed(2)}</span>
-        </div>
+
+        {items.length === 0 && (
+          <div className="empty-cart">Your cart is empty.</div>
+        )}
+
+        {items.map((item) => (
+          <div key={item.cartItemId} className="cart-row">
+            <span>
+              {item.baseItem.name}
+              <br />
+              <small>
+                Side: {item.options?.side || "None"} | Drink:{" "}
+                {item.options?.drink || "None"} | Sauce:{" "}
+                {item.options?.sauce || "None"}
+              </small>
+            </span>
+
+            <span>
+              ${(item.totalPrice * item.quantity).toFixed(2)}
+            </span>
+
+            <span>{item.quantity}</span>
+
+            <button
+              className="remove-btn"
+              onClick={() => handleRemoveItem(item.cartItemId)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className="subtotal-container">
+        <span>Subtotal:</span>
+        <span>${subtotal.toFixed(2)}</span>
+
+        <span>Tax:</span>
+        <span>${tax.toFixed(2)}</span>
+
+        <span>Total:</span>
+        <span>${total.toFixed(2)}</span>
+      </div>
 
       <PaymentForm
-        amount={Math.round(totalWithTax * 100)}
+        amount={Math.round(total * 100)} // cents
         onSuccess={handleOrderSuccess}
+        disabled={isSubmitting}
       />
 
-      <button onClick={handleClear} className='clear-btn'>Clear Cart</button>
+      <button className="clear-btn" onClick={handleClearCart} disabled={isSubmitting}>
+        Clear Cart
+      </button>
     </div>
   );
 };

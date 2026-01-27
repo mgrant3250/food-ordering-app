@@ -20,7 +20,7 @@ const AdminMenu = () => {
       try {
         const data = await fetchMenu();
         // Combine entrees, sides, drinks if needed
-        setMenuItems(data.entrees || []);
+        setMenuItems( data.entrees.concat(data.sides, data.sauces) || []);
       } catch (err) {
         console.error("Error fetching menu:", err);
       }

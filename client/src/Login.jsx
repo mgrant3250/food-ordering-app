@@ -89,7 +89,7 @@ const Login = () => {
           type="button"
           onClick={togglePassword}
           aria-label={showPassword ? "Hide password" : "Show password"}
-          className="password-toggle"
+          className="password-toggle-login"
         >
           {showPassword ? "hide" : "show"}
         </button>

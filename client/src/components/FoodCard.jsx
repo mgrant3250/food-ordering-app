@@ -16,8 +16,10 @@ const FoodCard = () => {
    const { entrees, drinks, sides, sauces, loading, error } = useSelector((state) => state.menu);
 
     useEffect(() => {
-    dispatch(loadMenu());
-  }, [dispatch]);
+    if(!entrees.length){
+      dispatch(loadMenu());
+    }
+  }, [dispatch, entrees.length]);
 
 
 // const { data: menu, isLoading, error, refetch } = useQuery({
@@ -34,7 +36,7 @@ const FoodCard = () => {
 
 if(loading) return <Spinner />
 
-if (!loading && entrees?.length === 0)
+if (!loading && !error && entrees.length === 0)
   return <p>No menu items available.</p>;
   
 
@@ -50,24 +52,27 @@ if (!loading && entrees?.length === 0)
 
   return (
     <>
-    <div className='food-card-container'>
-    {entrees.map((item) => (
-    <div key={item?._id} className="food-card">
+    <section className='food-card-container'>
+    {(entrees || []).map((item) => (
+    <article key={item?._id} className="food-card">
+
         <div className="food-card-image">
           <img 
           src={getImageUrl(item?.imageUrl)} 
           alt={item?.name || "Food item"} 
           loading="lazy" />
         </div>
+
         <h2 className="food-card-title">{item?.name}</h2>
         <FoodCardText text={item.description} maxLength={150} />
         <div className="food-card-price">
-          <span>${item.price}</span>
+          <span>${item.price.toFixed(2)}</span>
           <button onClick={() => handleAddToCart(item) } aria-label={`Add ${item.name} to cart`}>Add to Cart</button>
         </div>
-      </div>
+        
+      </article>
       ))}
-      </div>
+      </section>
     </>
   )
 }

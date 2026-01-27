@@ -2,7 +2,8 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { forgotPassword } from "./store/authSlice";
 import { toast } from "react-toastify";
-import "./Login.css";
+// import "./Login.css";
+import "./ForgotPassword.css"
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -32,8 +33,8 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
+    <div className="forgot-container">
+      <form className="forgot-form" onSubmit={handleSubmit}>
         <h2>Forgot Password</h2>
 
         {error && <p className="error">{error}</p>}

@@ -95,7 +95,7 @@
   padding-right: 2.5rem; /* space for the toggle button */
 }
 
-.password-toggle {
+.password-toggle-login {
   position: absolute;
   right: 1rem; 
   top: 35%;
