@@ -137,9 +137,11 @@ const CheckoutCard = () => {
         disabled={isSubmitting}
       />
 
+      <div className="cart-buttons">
       <button className="clear-btn" onClick={handleClearCart} disabled={isSubmitting}>
         Clear Cart
       </button>
+      </div>
     </div>
   );
 };
