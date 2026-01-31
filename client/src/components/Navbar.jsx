@@ -25,7 +25,6 @@ const Navbar = ({ onLogout }) => {
 
       <ul className={`navbar-links ${isOpen ? 'open' : ''}`}>
         <li><Link to="/">Home</Link></li>
-        <li>Dinner</li>
         {user?.role === "admin" && (
           <li><Link to="/admin">Admin Dashboard</Link></li>
         )}
