@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./FoodCard.css"; // make sure to keep your CSS here
+import "./FoodCard.css";
 
 const FoodCardText = ({ text, maxLength = 100 }) => {
   const [expanded, setExpanded] = useState(false);

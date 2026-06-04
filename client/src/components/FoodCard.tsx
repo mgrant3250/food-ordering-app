@@ -6,36 +6,21 @@ import FoodCardText from './FoodCardText'
 import { useSelector, useDispatch } from "react-redux";
 import { loadMenu } from "../store/menuSlice"
 import Spinner from "./Spinner"
-
-type MenuItem = {
-  _id: string
-  name: string
-  description: string
-  price: number
-  imageUrl: string
-}
-
-type MenuState = {
-  entrees: MenuItem[]
-  drinks: MenuItem[]
-  sides: MenuItem[]
-  sauces: MenuItem[]
-  loading: boolean
-  error: string | null
-}
+import { MenuItem } from "../types/menu"
+import type { RootState, AppDispatch } from "../store/store"
 
 
 const FoodCard = () => {
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
    const { entrees, drinks, sides, sauces, loading, error } =
-    useSelector((state: any): MenuState => state.menu)
+    useSelector((state: RootState)=> state.menu)
 
     useEffect(() => {
     if(!entrees.length){
-      dispatch(loadMenu() as any);
+      dispatch(loadMenu());
     }
   }, [dispatch, entrees.length]);
 
@@ -62,7 +47,7 @@ if (!loading && !error && entrees.length === 0)
   return (
     <div>
       <p>Error loading menu.</p>
-      <button onClick={() => dispatch(loadMenu() as any)}>
+      <button onClick={() => dispatch(loadMenu())}>
         Retry
       </button>
     </div>
@@ -71,7 +56,7 @@ if (!loading && !error && entrees.length === 0)
   return (
     <>
     <section className='food-card-container'>
-    {(entrees || []).map((item: MenuItem) => (
+    {entrees.map((item: MenuItem) => (
     <article key={item._id} className="food-card">
 
         <div className="food-card-image">
