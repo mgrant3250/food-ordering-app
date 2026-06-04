@@ -7,17 +7,35 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadMenu } from "../store/menuSlice"
 import Spinner from "./Spinner"
 
+type MenuItem = {
+  _id: string
+  name: string
+  description: string
+  price: number
+  imageUrl: string
+}
+
+type MenuState = {
+  entrees: MenuItem[]
+  drinks: MenuItem[]
+  sides: MenuItem[]
+  sauces: MenuItem[]
+  loading: boolean
+  error: string | null
+}
+
 
 const FoodCard = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-   const { entrees, drinks, sides, sauces, loading, error } = useSelector((state) => state.menu);
+   const { entrees, drinks, sides, sauces, loading, error } =
+    useSelector((state: any): MenuState => state.menu)
 
     useEffect(() => {
     if(!entrees.length){
-      dispatch(loadMenu());
+      dispatch(loadMenu() as any);
     }
   }, [dispatch, entrees.length]);
 
@@ -30,7 +48,7 @@ const FoodCard = () => {
 //   });
 
 
-  const handleAddToCart = useCallback((item) => {
+  const handleAddToCart = useCallback((item : MenuItem) => {
     navigate('/options', { state: { item, menu: { entrees, drinks, sides, sauces } } });
   }, [navigate, entrees, drinks, sides, sauces])
 
@@ -44,7 +62,7 @@ if (!loading && !error && entrees.length === 0)
   return (
     <div>
       <p>Error loading menu.</p>
-      <button onClick={() => dispatch(loadMenu())}>
+      <button onClick={() => dispatch(loadMenu() as any)}>
         Retry
       </button>
     </div>
@@ -53,17 +71,17 @@ if (!loading && !error && entrees.length === 0)
   return (
     <>
     <section className='food-card-container'>
-    {(entrees || []).map((item) => (
-    <article key={item?._id} className="food-card">
+    {(entrees || []).map((item: MenuItem) => (
+    <article key={item._id} className="food-card">
 
         <div className="food-card-image">
           <img 
-          src={getImageUrl(item?.imageUrl)} 
-          alt={item?.name || "Food item"} 
+          src={getImageUrl(item.imageUrl)} 
+          alt={item.name || "Food item"} 
           loading="lazy" />
         </div>
 
-        <h2 className="food-card-title">{item?.name}</h2>
+        <h2 className="food-card-title">{item.name}</h2>
         <FoodCardText text={item.description} maxLength={150} />
         <div className="food-card-price">
           <span>${item.price.toFixed(2)}</span>
