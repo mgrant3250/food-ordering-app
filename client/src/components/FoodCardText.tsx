@@ -1,7 +1,13 @@
 import { useState } from "react";
 import "./FoodCard.css";
 
-const FoodCardText = ({ text, maxLength = 100 }) => {
+type FoodCardTextProps = {
+  text: string;
+  maxLength?: number;
+};
+
+
+const FoodCardText = ({ text, maxLength = 100 } : FoodCardTextProps) => {
   const [expanded, setExpanded] = useState(false);
 
   if (!text) return null;
@@ -15,6 +21,7 @@ const FoodCardText = ({ text, maxLength = 100 }) => {
       {isLong && (
         <button
           className="read-more-btn"
+          type="button"
           onClick={() => setExpanded((prev) => !prev)}
         >
           {expanded ? "Show Less" : "Read More"}

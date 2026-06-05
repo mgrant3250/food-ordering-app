@@ -2,15 +2,39 @@ import { useState, useEffect } from "react";
 import "./AdminMenu.css";
 import { fetchMenu, postMenu, updateMenuItem, deleteMenuItem } from "../api/menu";
 
+type MenuType = "entree" | "side" | "drink" | "sauce";
+
+type MenuItem = {
+  _id: string;
+  name: string;
+  price: number;
+  type: MenuType;
+  description: string;
+  imageUrl?: string;
+};
+
+type MenuResponse = {
+  entrees: MenuItem[];
+  sides: MenuItem[];
+  drinks: MenuItem[];
+  sauces: MenuItem[];
+};
+
+type MenuItemResponse = {
+  success: boolean;
+  item: MenuItem;
+  message?: string;
+};
+
 const AdminMenu = () => {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [type, setType] = useState("entree");
-  const [image, setImage] = useState(null);
-  const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [menuItems, setMenuItems] = useState([]);
-  const [editingItem, setEditingItem] = useState(null);
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [type, setType] = useState<MenuType>("entree");
+  const [image, setImage] = useState<File | null>(null);
+  const [description, setDescription] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
 
   const token = localStorage.getItem("token");
 
@@ -18,7 +42,7 @@ const AdminMenu = () => {
   useEffect(() => {
     const loadMenu = async () => {
       try {
-        const data = await fetchMenu();
+        const data : MenuResponse = await fetchMenu();
         // Combine entrees, sides, drinks if needed
         setMenuItems( data.entrees.concat(data.sides, data.sauces) || []);
       } catch (err) {
@@ -29,7 +53,7 @@ const AdminMenu = () => {
   }, []);
 
   // Handle add/update item
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!name || !price || !type) {
@@ -52,7 +76,7 @@ const AdminMenu = () => {
     if (image) formData.append("image", image);
 
     try {
-      let data;
+      let data : MenuItemResponse;;
       if (editingItem) {
         data = await updateMenuItem(editingItem._id, token, formData);
         setMenuItems(menuItems.map(item => item._id === editingItem._id ? data.item : item));
@@ -71,26 +95,32 @@ const AdminMenu = () => {
       setImage(null);
       setDescription("");
 
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
-      alert("Error: " + err.message);
+
+      const message =
+      err instanceof Error
+      ? err.message
+      : "Unknown error";
+
+      alert("Error: " + message);
     } finally {
       setLoading(false);
     }
   };
 
   // Edit an existing item
-  const handleEditClick = (item) => {
+  const handleEditClick = (item : MenuItem) => {
     setEditingItem(item);
     setName(item.name);
-    setPrice(item.price);
+    setPrice(item.price.toString());
     setType(item.type);
     setDescription(item.description);
     setImage(null);
   };
 
   // Delete an item
-  const handleDelete = async (id) => {
+  const handleDelete = async (id : string) => {
     if (!window.confirm("Delete this item?")) return;
     try {
       const data = await deleteMenuItem(id, token);
@@ -120,13 +150,13 @@ const AdminMenu = () => {
       <form onSubmit={handleSubmit}>
         <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
         <input placeholder="Price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
-        <select value={type} onChange={(e) => setType(e.target.value)}>
+        <select value={type} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setType(e.target.value as MenuType)}>
           <option value="entree">Entree</option>
           <option value="side">Side</option>
           <option value="drink">Drink</option>
         </select>
 
-        <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+        <input type="file" accept="image/*" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImage(e.target.files?.[0] || null)} />
 
         {image && (
           <img
@@ -139,7 +169,7 @@ const AdminMenu = () => {
         <textarea
           placeholder="Description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
           rows={4}
         />
 

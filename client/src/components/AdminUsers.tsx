@@ -2,16 +2,31 @@ import { useEffect, useState } from "react";
 import "./AdminUsers.css";
 import { changeRole, getUsers, deleteUser } from "../api/user";
 import Spinner from "./Spinner";
+import { toast } from "react-toastify"
+
+type UserRole = "user" | "admin";
+
+type User = {
+  _id: string;
+  email: string;
+  role: UserRole;
+};
+
+type ApiResponse<T> = {
+  success: boolean;
+  message?: string;
+  users?: T;
+};
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchUsers = async () => {
     try{
-      const data = await getUsers();
+      const data : ApiResponse<User[]> = await getUsers();
 
-      if (data.success) setUsers(data.users);
+      if (data.success && data.users) setUsers(data.users);
     } catch (err) {
       console.error("Failed to load users:", err);
     } finally {
@@ -19,39 +34,39 @@ const AdminUsers = () => {
     }
   };
 
-  const handleRoleChange = async (id, newRole) => {
+  const handleRoleChange = async (id : string, newRole: UserRole) => {
     try{
-      const data = await changeRole(id, newRole);
+      const data : ApiResponse<null> = await changeRole(id, newRole);
 
       if (data.success) {
-        alert("Role updated successfully");
+        toast.success("Role updated successfully")
         setUsers((prev) =>
           prev.map((u) => (u._id === id ? { ...u, role: newRole } : u))
         );
       } else {
-        alert(data.message || "Failed to update role");
+        toast.error(data.message || "Failed to update role");
       }
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      toast.error("Server error");
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id : string) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try{
-      const data = await deleteUser(id);
+      const data : ApiResponse<null> = await deleteUser(id);
 
       if (data.success) {
         setUsers((prev) => prev.filter((u) => u._id !== id));
-        alert("User deleted.");
+        toast.success("User deleted")
       } else {
-        alert(data.message || "Failed to delete user");
+        toast.error(data.message || "Failed to delete user")
       }
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      toast.error("Server error");
     }
   };
 
@@ -84,7 +99,7 @@ const AdminUsers = () => {
                 <td>
                   <select
                     value={user.role}
-                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                    onChange={(e) => handleRoleChange(user._id, e.target.value as UserRole)}
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
