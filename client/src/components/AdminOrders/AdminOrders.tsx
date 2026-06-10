@@ -3,17 +3,10 @@ import { getOrders } from "../../api/order";
 import OrderCard from "./OrderCard";
 import type { CartItem } from "../../types/Cart";
 import Spinner from "../Spinner";
+import type { Order } from "../../types/order";
 import "./AdminOrders.css";
 
 /* -------------------- Types -------------------- */
-
-type Order = {
-  _id: string;
-  email?: string;
-  total?: number;
-  createdAt?: string;
-  cart?: CartItem[]; // replace with shared CartItem type if available
-};
 
 type ApiResponse<T> = {
   success: boolean;
@@ -28,12 +21,17 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const token = localStorage.getItem("token")
+
   useEffect(() => {
     const controller = new AbortController();
 
     const fetchOrders = async () => {
       try {
-        const data: ApiResponse<Order[]> = await getOrders(controller.signal);
+        if (!token) {
+            throw new Error("No authentication token found");
+         }
+        const data: ApiResponse<Order[]> = await getOrders(token, controller.signal);
 
         if (!data.success) {
           throw new Error(data.message || "Failed to load orders");

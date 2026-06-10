@@ -1,24 +1,9 @@
 import { useState, useEffect } from "react";
 import "./AdminMenu.css";
-import { fetchMenu, postMenu, updateMenuItem, deleteMenuItem } from "../api/menu";
+import MenuItemForm from "./MenuItemForm";
+import { fetchMenu, postMenu, updateMenuItem, deleteMenuItem } from "../../api/menu";
+import type { MenuResponse, MenuType, MenuItem } from "../../types/menu";
 
-type MenuType = "entree" | "side" | "drink" | "sauce";
-
-type MenuItem = {
-  _id: string;
-  name: string;
-  price: number;
-  type: MenuType;
-  description: string;
-  imageUrl?: string;
-};
-
-type MenuResponse = {
-  entrees: MenuItem[];
-  sides: MenuItem[];
-  drinks: MenuItem[];
-  sauces: MenuItem[];
-};
 
 type MenuItemResponse = {
   success: boolean;
@@ -26,12 +11,16 @@ type MenuItemResponse = {
   message?: string;
 };
 
+const initialFormState = {
+  name: "",
+  price: "",
+  type: "entree" as MenuType,
+  image: null as File | null,
+  description: "",
+};
+
 const AdminMenu = () => {
-  const [name, setName] = useState<string>("");
-  const [price, setPrice] = useState<string>("");
-  const [type, setType] = useState<MenuType>("entree");
-  const [image, setImage] = useState<File | null>(null);
-  const [description, setDescription] = useState<string>("");
+  const [form, setForm] = useState(initialFormState)
   const [loading, setLoading] = useState<boolean>(false);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
@@ -56,12 +45,12 @@ const AdminMenu = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !price || !type) {
+    if (!form.name || !form.price || !form.type) {
       alert("Please fill out all required fields.");
       return;
     }
 
-    if (type === "entree" && !image && !editingItem) {
+    if (form.type === "entree" && !form.image && !editingItem) {
       alert("Entrees require an image.");
       return;
     }
@@ -69,14 +58,14 @@ const AdminMenu = () => {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("price", price);
-    formData.append("type", type);
-    formData.append("description", description);
-    if (image) formData.append("image", image);
+    formData.append("name", form.name);
+    formData.append("price", form.price);
+    formData.append("type", form.type);
+    formData.append("description", form.description);
+    if (form.image) formData.append("image", form.image);
 
     try {
-      let data : MenuItemResponse;;
+      let data : MenuItemResponse;
       if (editingItem) {
         data = await updateMenuItem(editingItem._id, token, formData);
         setMenuItems(menuItems.map(item => item._id === editingItem._id ? data.item : item));
@@ -88,12 +77,7 @@ const AdminMenu = () => {
         alert("Item added!");
       }
 
-      // Reset form
-      setName("");
-      setPrice("");
-      setType("entree");
-      setImage(null);
-      setDescription("");
+      setForm(initialFormState)
 
     } catch (err: unknown) {
       console.error(err);
@@ -112,11 +96,13 @@ const AdminMenu = () => {
   // Edit an existing item
   const handleEditClick = (item : MenuItem) => {
     setEditingItem(item);
-    setName(item.name);
-    setPrice(item.price.toString());
-    setType(item.type);
-    setDescription(item.description);
-    setImage(null);
+    setForm({
+    name: item.name,
+    price: item.price.toString(),
+    type: item.type,
+    image: null,
+    description: item.description,
+  });
   };
 
   // Delete an item
@@ -137,53 +123,22 @@ const AdminMenu = () => {
   // Cancel editing
   const handleCancelEdit = () => {
     setEditingItem(null);
-    setName("");
-    setPrice("");
-    setType("entree");
-    setImage(null);
-    setDescription("");
+    setForm(initialFormState)
   };
 
   return (
     <div className="admin-menu-container">
       <h2>{editingItem ? "Edit Menu Item" : "Add Menu Item"}</h2>
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <input placeholder="Price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
-        <select value={type} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setType(e.target.value as MenuType)}>
-          <option value="entree">Entree</option>
-          <option value="side">Side</option>
-          <option value="drink">Drink</option>
-        </select>
 
-        <input type="file" accept="image/*" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImage(e.target.files?.[0] || null)} />
+        <MenuItemForm 
+        form={form}
+        setForm={setForm}
+        editingItem={editingItem}
+        loading={loading}
+        handleSubmit={handleSubmit}
+        handleCancelEdit={handleCancelEdit}
 
-        {image && (
-          <img
-            src={URL.createObjectURL(image)}
-            alt="Preview"
-            style={{ marginTop: "10px", width: "120px", borderRadius: "6px" }}
-          />
-        )}
-
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-          rows={4}
         />
-
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button type="submit" disabled={loading}>
-            {loading ? "Saving..." : editingItem ? "Update Item" : "Add Item"}
-          </button>
-          {editingItem && (
-            <button type="button" onClick={handleCancelEdit}>
-              Cancel
-            </button>
-          )}
-        </div>
-      </form>
 
       <h3>Current Menu</h3>
       <ul className="menu-list">

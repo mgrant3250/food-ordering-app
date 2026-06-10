@@ -3,14 +3,7 @@ import "./AdminUsers.css";
 import { changeRole, getUsers, deleteUser } from "../api/user";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify"
-
-type UserRole = "user" | "admin";
-
-type User = {
-  _id: string;
-  email: string;
-  role: UserRole;
-};
+import type { User, UserRole } from "../types/user";
 
 type ApiResponse<T> = {
   success: boolean;
@@ -22,9 +15,14 @@ const AdminUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const token = localStorage.getItem("token")
+
   const fetchUsers = async () => {
     try{
-      const data : ApiResponse<User[]> = await getUsers();
+      if(!token){
+        throw new Error("No authentication token found");
+      }
+      const data : ApiResponse<User[]> = await getUsers(token);
 
       if (data.success && data.users) setUsers(data.users);
     } catch (err) {
@@ -36,7 +34,10 @@ const AdminUsers = () => {
 
   const handleRoleChange = async (id : string, newRole: UserRole) => {
     try{
-      const data : ApiResponse<null> = await changeRole(id, newRole);
+      if(!token){
+        throw new Error("No authentication token found");
+      }
+      const data : ApiResponse<User> = await changeRole(token, id, newRole);
 
       if (data.success) {
         toast.success("Role updated successfully")
@@ -56,7 +57,10 @@ const AdminUsers = () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try{
-      const data : ApiResponse<null> = await deleteUser(id);
+      if(!token){
+        throw new Error("No authentication token found");
+      }
+      const data : ApiResponse<null> = await deleteUser(token, id);
 
       if (data.success) {
         setUsers((prev) => prev.filter((u) => u._id !== id));

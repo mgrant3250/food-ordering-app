@@ -3,32 +3,14 @@ import type { CartItem } from "../../types/Cart";
 
 /* -------------------- Types -------------------- */
 
-// type MenuItem = {
-//   _id: string;
-//   name: string;
-// };
-
-// type CartOptions = {
-//   side?: string;
-//   sauce?: string;
-//   drink?: string;
-// };
-
-// type CartItem = {
-//   cartItemId?: string;
-//   quantity?: number;
-//   baseItem?: MenuItem;
-//   options?: CartOptions;
-// };
-
 type OrderItemsListProps = {
-  cart?: CartItem[];
+  cart: CartItem[];
 };
 
 /* -------------------- Component -------------------- */
 
 const OrderItemsList: React.FC<OrderItemsListProps> = ({ cart }) => {
-  if (!cart || cart.length === 0) return null;
+  if (cart.length === 0) return null;
 
   return (
     <ul>
@@ -45,7 +27,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ cart }) => {
             {quantity}× {baseItem?.name ?? "Unknown item"} (
             Side: {options.side ?? "None"},{" "}
             Sauce: {options.sauce ?? "None"},{" "}
-            Drink: {options.drink ?? "None"})
+            Drink: {options.drink ?? "None"} )
           </li>
         );
       })}

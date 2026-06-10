@@ -1,29 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import { fetchLogin, fetchForgotPassword } from "../api/auth"
+import type { AuthUser } from "../types/user"
+import type { LoginResponse, ForgotPasswordResponse, AuthState, LoginArgs } from "../types/auth"
 
-/* -------------------- Types -------------------- */
-
-type User = {
-  email: string
-  role: string
-}
-
-type AuthState = {
-  user: User | null
-  token: string | null
-  loading: boolean
-  error: string | null
-  forgotPasswordMessage: string | null
-}
-
-type LoginArgs = {
-  email: string
-  password: string
-}
 
 /* -------------------- Helpers -------------------- */
 
-const getStoredUser = (): User | null => {
+const getStoredUser = (): AuthUser | null => {
   try {
     const data = localStorage.getItem("user")
     return data ? JSON.parse(data) : null
@@ -52,7 +35,7 @@ export const forgotPassword = createAsyncThunk(
 
 const initialState: AuthState = {
   user: getStoredUser(),
-  token: localStorage.getItem("token"), // ✅ string | null is correct
+  token: localStorage.getItem("token"), 
   loading: false,
   error: null,
   forgotPasswordMessage: null,
@@ -87,21 +70,21 @@ const authSlice = createSlice({
 
       .addCase(
         loginUser.fulfilled,
-        (state, action: PayloadAction<any>) => {
+        (state, action: PayloadAction<LoginResponse>) => {
           state.loading = false
 
           if (action.payload.success) {
             state.user = {
-              email: action.payload.email,
-              role: action.payload.role,
+              email: action.payload.email ?? "",
+              role: action.payload.role ?? "user",
             }
 
-            state.token = action.payload.token
+            state.token = action.payload.token ?? null
 
             localStorage.setItem("user", JSON.stringify(state.user))
             localStorage.setItem("token", action.payload.token ?? "")
           } else {
-            state.error = action.payload.message
+            state.error = action.payload.message ?? "login failed"
           }
         }
       )
@@ -120,7 +103,7 @@ const authSlice = createSlice({
 
       .addCase(
         forgotPassword.fulfilled,
-        (state, action: PayloadAction<any>) => {
+        (state, action: PayloadAction<ForgotPasswordResponse>) => {
           state.loading = false
 
           if (action.payload.success) {

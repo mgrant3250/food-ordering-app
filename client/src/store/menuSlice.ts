@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import { fetchMenu } from "../api/menu"
-import { MenuItem, MenuState } from "../types/menu"
+import { MenuState } from "../types/menu"
 
 const initialState: MenuState = {
   entrees: [],

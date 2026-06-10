@@ -1,28 +1,8 @@
 import OrderItemsList from "./OrderItemsList";
-import { CartItem } from "../../types/Cart";
+import type { Order } from "../../types/order";
 
 /* -------------------- Types -------------------- */
 
-// type CartItem = {
-//   cartItemId?: string;
-//   quantity?: number;
-//   baseItem?: {
-//     _id: string;
-//     name: string;
-//   };
-//   options?: {
-//     side?: string;
-//     sauce?: string;
-//     drink?: string;
-//   };
-// };
-
-type Order = {
-  email?: string;
-  total?: number;
-  createdAt?: string | Date;
-  cart?: CartItem[];
-};
 
 type OrderCardProps = {
   order: Order;
