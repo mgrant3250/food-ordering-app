@@ -1,34 +1,45 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "./store/store";
 import { forgotPassword } from "./store/authSlice";
 import { toast } from "react-toastify";
-// import "./Login.css";
-import "./ForgotPassword.css"
+import "./ForgotPassword.css";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string>("");
 
-  const emailRef = useRef(null);
-  const dispatch = useDispatch();
+  const emailRef = useRef<HTMLInputElement>(null);
 
-  const { loading, error } = useSelector((s) => s.auth);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const handleSubmit = async (e) => {
+  const { loading, error } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
     if (!email) {
       toast.error("Please enter your email");
-      emailRef.current.focus();
+      emailRef.current?.focus();
       return;
     }
 
-    const result = await dispatch(forgotPassword(email.trim().toLowerCase()));
+    const result = await dispatch(
+      forgotPassword(email.trim().toLowerCase())
+    );
 
-    if (result.payload?.success) {
-      toast.success("Password reset link sent to your email");
-      setEmail("");
-    } else {
-      toast.error(result.payload?.message || "Error sending reset email");
+    if (forgotPassword.fulfilled.match(result)) {
+      if (result.payload.success) {
+        toast.success("Password reset link sent to your email");
+        setEmail("");
+      } else {
+        toast.error(
+          result.payload.message || "Error sending reset email"
+        );
+      }
     }
   };
 
@@ -40,6 +51,7 @@ const ForgotPassword = () => {
         {error && <p className="error">{error}</p>}
 
         <label htmlFor="email">Email:</label>
+
         <input
           id="email"
           ref={emailRef}

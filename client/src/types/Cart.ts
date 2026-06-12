@@ -1,17 +1,3 @@
-// export type CartItem = {
-//   cartItemId?: string;
-//   quantity?: number;
-//   baseItem?: {
-//     _id: string;
-//     name: string;
-// };options?: {
-//     side?: string;
-//     sauce?: string;
-//     drink?: string;
-//   }
-// };
-
-
 export type CartOptions = {
   side?: string;
   drink?: string;
@@ -21,6 +7,8 @@ export type CartOptions = {
 export type BaseItem = {
   _id: string;
   name: string;
+  price: number
+  imageUrl: string
 };
 
 export type CartItem = {

@@ -4,16 +4,26 @@ import { toast } from "react-toastify";
 import { resetPassword } from "./api/auth";
 
 const ResetPassword = () => {
-  const { token } = useParams();
-  const [password, setPassword] = useState("");
+  const { token } = useParams<{ token: string }>();
 
-  const handleSubmit = async (e) => {
+  const [password, setPassword] = useState<string>("");
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
-    const data = await resetPassword(token, password)
+    if (!token) {
+      toast.error("Invalid reset link");
+      return;
+    }
+
+    const data = await resetPassword(token, password);
 
     if (data.success) {
-      toast.success("Password reset successful. You can now log in.");
+      toast.success(
+        "Password reset successful. You can now log in."
+      );
     } else {
       toast.error(data.message || "Failed to reset password");
     }
@@ -24,11 +34,15 @@ const ResetPassword = () => {
       <form className="reset-form" onSubmit={handleSubmit}>
         <h2>Reset Password</h2>
 
-        <label>New Password:</label>
+        <label htmlFor="password">New Password:</label>
+
         <input
+          id="password"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setPassword(e.target.value)
+          }
         />
 
         <button type="submit">Reset Password</button>
