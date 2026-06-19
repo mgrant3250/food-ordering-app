@@ -10,3 +10,16 @@ export async function fetchJSON<T>(
 
   return response.json();
 }
+
+export const fetchAuthJSON = <T>(
+  url: string,
+  token: string,
+  options: RequestInit = {}
+) =>
+  fetchJSON<T>(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });

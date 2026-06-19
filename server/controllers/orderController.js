@@ -42,7 +42,7 @@ exports.placeOrder = async (req, res) => {
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
-    res.json({ success: true, orders });
+    res.json({ success: true, data: orders });
   } catch (err) {
     console.error("Error fetching orders:", err);
     res.status(500).json({ success: false, message: "Error fetching orders" });
@@ -55,7 +55,7 @@ exports.updateOrderStatus = async (req, res) => {
     const { status } = req.body;
 
     const updatedOrder = await Order.findByIdAndUpdate(id, { status }, { new: true });
-    res.json({ success: true, order: updatedOrder });
+    res.json({ success: true, data: updatedOrder });
   } catch (err) {
     console.error("Error updating order status:", err);
     res.status(500).json({ success: false, message: "Error updating order" });

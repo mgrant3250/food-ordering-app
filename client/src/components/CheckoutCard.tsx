@@ -2,7 +2,7 @@ import "./CheckoutCard.css";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PaymentForm from "./payments/PaymentForm";
-import { postOrder } from "../api/order";
+import { createOrder } from "../api/order";
 import { removeFromCart, clearCart } from "../store/cartSlice";
 import { toast } from "react-toastify";
 import { toastOptions } from "../utils/toastOptions";
@@ -73,7 +73,7 @@ const CheckoutCard = () => {
         total: Number(total.toFixed(2)),
       };
 
-      const result = await postOrder(token, orderData);
+      const result = await createOrder(token, orderData);
 
       if (result?.success) {
         toast.success(

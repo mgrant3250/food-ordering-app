@@ -38,7 +38,7 @@ const menuSlice = createSlice({
       )
       .addCase(loadMenu.rejected, (state, action) => {
         state.loading = false
-        state.error = action.error.message ?? "Failed to load menu"
+        state.error = action.error?.message ?? "Failed to load menu"
       })
   },
 })

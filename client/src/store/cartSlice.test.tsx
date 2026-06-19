@@ -1,19 +1,33 @@
-import cartReducer, { addToCart, removeFromCart, changeQty, clearCart } from "./cartSlice";
+import cartReducer, {
+  addToCart,
+  removeFromCart,
+  changeQty,
+  clearCart,
+} from "./cartSlice";
+
+import { describe, it, expect } from "vitest";
+import type { AnyAction } from "@reduxjs/toolkit";
+import type { CartState, CartItem } from "../types/Cart";
 
 describe("cartSlice reducer", () => {
-  const initialState = {
+  const initialState: CartState = {
     items: [],
     total: 0,
   };
 
-  const sampleItem = {
+  const sampleItem: CartItem = {
     cartItemId: "1",
-    name: "Burger",
+    baseItem: { _id: "1", name: "burger", price: 10, imageUrl: ""},
     totalPrice: 10,
+
+    // add any other required CartItem properties here
+    quantity: 1,
   };
 
   it("should return the initial state", () => {
-    expect(cartReducer(undefined, { type: undefined })).toEqual(initialState);
+    expect(cartReducer(undefined, { type: "" } as AnyAction)).toEqual(
+      initialState
+    );
   });
 
   it("should handle addToCart for a new item", () => {
@@ -25,7 +39,7 @@ describe("cartSlice reducer", () => {
   });
 
   it("should increment quantity if the item already exists", () => {
-    const stateWithItem = {
+    const stateWithItem: CartState = {
       items: [{ ...sampleItem, quantity: 1 }],
       total: 10,
     };
@@ -38,7 +52,7 @@ describe("cartSlice reducer", () => {
   });
 
   it("should handle removeFromCart", () => {
-    const stateWithItem = {
+    const stateWithItem: CartState = {
       items: [{ ...sampleItem, quantity: 2 }],
       total: 20,
     };
@@ -50,31 +64,37 @@ describe("cartSlice reducer", () => {
   });
 
   it("should handle changeQty increasing quantity", () => {
-    const stateWithItem = {
+    const stateWithItem: CartState = {
       items: [{ ...sampleItem, quantity: 1 }],
       total: 10,
     };
 
-    const state = cartReducer(stateWithItem, changeQty({ id: "1", amount: 2 }));
+    const state = cartReducer(
+      stateWithItem,
+      changeQty({ id: "1", amount: 2 })
+    );
 
     expect(state.items[0].quantity).toBe(3);
     expect(state.total).toBe(30);
   });
 
   it("should handle changeQty decreasing quantity and remove item if quantity <= 0", () => {
-    const stateWithItem = {
+    const stateWithItem: CartState = {
       items: [{ ...sampleItem, quantity: 2 }],
       total: 20,
     };
 
-    const state = cartReducer(stateWithItem, changeQty({ id: "1", amount: -2 }));
+    const state = cartReducer(
+      stateWithItem,
+      changeQty({ id: "1", amount: -2 })
+    );
 
     expect(state.items.length).toBe(0);
     expect(state.total).toBe(0);
   });
 
   it("should handle clearCart", () => {
-    const stateWithItems = {
+    const stateWithItems: CartState = {
       items: [{ ...sampleItem, quantity: 2 }],
       total: 20,
     };

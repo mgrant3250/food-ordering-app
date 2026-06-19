@@ -1,29 +1,17 @@
 import { API_ENDPOINTS } from "./endpoints";
 import { Order } from "../types/order";
-import { fetchJSON } from "./fetchJSON";
+import { fetchAuthJSON } from "./fetchJSON";
 import type { CartItem } from "../types/Cart";
+import type { ApiResponse } from "./types";
 
+type CreateOrderResponse = ApiResponse
+type GetOrdersResponse = ApiResponse<Order[]>;
 
-export type CreateOrderResponse = {
-  success: boolean;
-  message?: string;
-};
-
-export type GetOrdersResponse = {
-  success: boolean;
-  message?: string;
-  orders: Order[];
-};
-
-type OrderPayload = {
+export type OrderPayload = {
   email: string;
   cart: CartItem[];
   total: number;
 };
-
-const authHeader = (token: string) : HeadersInit => ({ 
-  Authorization: `Bearer ${token}` 
-});
 
 
 /* -------------------- API FUNCTIONS -------------------- */
@@ -31,19 +19,20 @@ const authHeader = (token: string) : HeadersInit => ({
 /**
  * Create a new order
  */
-export const postOrder = (
+export const createOrder = (
   token: string,
   orderData: OrderPayload
-): Promise<CreateOrderResponse> => {
-  return fetchJSON<CreateOrderResponse>(API_ENDPOINTS.order, {
+): Promise<CreateOrderResponse> => 
+  fetchAuthJSON<CreateOrderResponse>(API_ENDPOINTS.order,
+    token,
+    {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...authHeader(token),
     },
     body: JSON.stringify(orderData),
-  });
-};
+  }
+  );
 
 /**
  * Get all admin orders
@@ -51,11 +40,9 @@ export const postOrder = (
 export const getOrders = (
   token: string,
   signal?: AbortSignal
-): Promise<GetOrdersResponse> => {
-
-  return fetchJSON<GetOrdersResponse>(API_ENDPOINTS.adminOrder, {
-    method: "GET",
-    headers: authHeader(token),
-    signal,
-  });
-};
+): Promise<GetOrdersResponse> => 
+  fetchAuthJSON<GetOrdersResponse>(
+    API_ENDPOINTS.adminOrder, 
+    token,
+    {signal}
+  );

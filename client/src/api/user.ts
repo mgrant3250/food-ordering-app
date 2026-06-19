@@ -9,7 +9,6 @@ export type ApiResponse<T> = {
   success: boolean;
   message?: string;
   data?: T;
-  // user?: User;
 };
 
 const authHeader = (token: string) : HeadersInit => ({ 

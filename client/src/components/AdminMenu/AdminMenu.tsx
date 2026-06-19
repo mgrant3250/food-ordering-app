@@ -66,6 +66,9 @@ const AdminMenu = () => {
 
     try {
       let data : MenuItemResponse;
+      if(!token){
+        throw new Error("Authentication token is required")
+      }
       if (editingItem) {
         data = await updateMenuItem(editingItem._id, token, formData);
         setMenuItems(menuItems.map(item => item._id === editingItem._id ? data.item : item));
@@ -109,6 +112,9 @@ const AdminMenu = () => {
   const handleDelete = async (id : string) => {
     if (!window.confirm("Delete this item?")) return;
     try {
+      if(!token){
+        throw new Error("No Authentication token found")
+      }
       const data = await deleteMenuItem(id, token);
       if (data.success) {
         setMenuItems(menuItems.filter(item => item._id !== id));
