@@ -1,10 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.ts",
+    "dev": "ts-node-dev src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,5 +22,12 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.11",
     "stripe": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
   }
 }
