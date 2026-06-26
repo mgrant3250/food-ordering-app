@@ -11,7 +11,7 @@ export type ApiResponse = {
 };
 
 export type ApiResponseWithItem<T> = ApiResponse & {
-  item: T;
+  data: T;
 };
 
 /* -------------------- API Functions -------------------- */

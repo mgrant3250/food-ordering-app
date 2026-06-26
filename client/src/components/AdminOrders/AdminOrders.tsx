@@ -4,15 +4,9 @@ import OrderCard from "./OrderCard";
 import type { CartItem } from "../../types/Cart";
 import Spinner from "../Spinner";
 import type { Order } from "../../types/order";
+import type { ApiResponse } from "../../api/types";
 import "./AdminOrders.css";
 
-/* -------------------- Types -------------------- */
-
-type ApiResponse<T> = {
-  success: boolean;
-  message?: string;
-  orders?: T;
-};
 
 /* -------------------- Component -------------------- */
 
@@ -37,7 +31,7 @@ const AdminOrders = () => {
           throw new Error(data.message || "Failed to load orders");
         }
 
-        setOrders(data.orders ?? []);
+        setOrders(data.data ?? []);
       } catch (err: unknown) {
         if (err instanceof DOMException && err.name === "AbortError") {
           return;

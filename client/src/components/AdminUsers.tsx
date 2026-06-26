@@ -3,13 +3,8 @@ import "./AdminUsers.css";
 import { changeRole, getUsers, deleteUser } from "../api/user";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify"
+import type { ApiResponse } from "../api/types";
 import type { User, UserRole } from "../types/user";
-
-type ApiResponse<T> = {
-  success: boolean;
-  message?: string;
-  users?: T;
-};
 
 const AdminUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -24,7 +19,7 @@ const AdminUsers = () => {
       }
       const data : ApiResponse<User[]> = await getUsers(token);
 
-      if (data.success && data.users) setUsers(data.users);
+      if (data.success && data.data) setUsers(data.data);
     } catch (err) {
       console.error("Failed to load users:", err);
     } finally {

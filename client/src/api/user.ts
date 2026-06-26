@@ -1,19 +1,7 @@
 import { API_ENDPOINTS } from "./endpoints";
 import { User, UserRole } from "../types/user";
-import { fetchJSON } from "./fetchJSON";
-
-/* -------------------- Types -------------------- */
-
-
-export type ApiResponse<T> = {
-  success: boolean;
-  message?: string;
-  data?: T;
-};
-
-const authHeader = (token: string) : HeadersInit => ({ 
-  Authorization: `Bearer ${token}` 
-});
+import { fetchAuthJSON } from "./fetchJSON";
+import type { ApiResponse } from "./types";
 
 
 /* -------------------- API FUNCTIONS -------------------- */
@@ -23,12 +11,9 @@ const authHeader = (token: string) : HeadersInit => ({
  */
 export const getUsers = (token: string): Promise<ApiResponse<User[]>> => {
 
-  return fetchJSON<ApiResponse<User[]>>(
+  return fetchAuthJSON<ApiResponse<User[]>>(
     API_ENDPOINTS.adminUsers(),
-    {
-      method: "GET",
-      headers: authHeader(token)
-    }
+    token,
   );
 };
 
@@ -41,13 +26,13 @@ export const changeRole = (
   newRole: UserRole
 ): Promise<ApiResponse<User>> => {
 
-  return fetchJSON<ApiResponse<User>>(
+  return fetchAuthJSON<ApiResponse<User>>(
     API_ENDPOINTS.changeRole(id),
+    token,
     {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        ...authHeader(token),
       },
       body: JSON.stringify({ role: newRole }),
     }
@@ -62,11 +47,11 @@ export const deleteUser = (
   id: string
 ): Promise<ApiResponse<null>> => {
 
-  return fetchJSON<ApiResponse<null>>(
+  return fetchAuthJSON<ApiResponse<null>>(
     API_ENDPOINTS.deleteUser(id),
+    token,
     {
       method: "DELETE",
-      headers: authHeader(token),
     }
   );
 };
