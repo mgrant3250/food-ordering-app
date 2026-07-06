@@ -9,7 +9,7 @@
     "noEmit": true,
     "isolatedModules": true,
 
-    "allowJs": true,
+    "allowJs": false,
     "checkJs": false,
 
     "types": ["@testing-library/jest-dom"]

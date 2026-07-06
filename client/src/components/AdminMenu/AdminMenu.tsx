@@ -67,7 +67,7 @@ const AdminMenu = () => {
     try {
       let data : MenuItemResponse;
       if(!token){
-        throw new Error("Authentication token is required")
+        throw new Error("Authentication token is not valid")
       }
       if (editingItem) {
         data = await updateMenuItem(editingItem._id, token, formData);

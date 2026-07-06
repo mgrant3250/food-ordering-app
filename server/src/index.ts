@@ -13,7 +13,7 @@ dotenv.config();
 
 const app = express();
 const PORT : number = Number(process.env.PORT) || 5000;
-const CLIENT_URL: string = process.env.CLIENT_URL || "*";
+const CLIENT_URL: string = process.env.CLIENT_URL || "http://localhost:5173";
 const MONGO_URI = process.env.MONGO_URI;
 
 app.use(cors({
